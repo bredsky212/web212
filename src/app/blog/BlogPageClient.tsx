@@ -2,11 +2,12 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import type { BlogPost } from "@/lib/strapi/blog";
+import type { BlogPostPreview } from "@/lib/strapi/types";
 
 interface BlogPageClientProps {
-    posts: BlogPost[];
+    posts: BlogPostPreview[];
     categories: string[];
 }
 
@@ -21,7 +22,7 @@ function formatDate(value?: string | null) {
     return date.toLocaleDateString();
 }
 
-function BlogCard({ post, index }: { post: BlogPost; index: number }) {
+function BlogCard({ post, index }: { post: BlogPostPreview; index: number }) {
     const formattedDate = formatDate(post.publishedAt);
 
     return (
@@ -34,11 +35,13 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
             <Link href={`/blog/${post.slug}`}>
                 <div className="bg-gradient-to-br from-gray-900/60 to-black border border-white/10 rounded-lg p-6 h-full hover:border-neon-red/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(139,0,0,0.1)]">
                     {post.coverImageUrl && (
-                        <div className="mb-4 overflow-hidden rounded">
-                            <img
+                        <div className="mb-4 overflow-hidden rounded relative h-40">
+                            <Image
                                 src={post.coverImageUrl}
                                 alt={post.title}
-                                className="w-full h-40 object-cover"
+                                fill
+                                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                                className="object-cover"
                             />
                         </div>
                     )}

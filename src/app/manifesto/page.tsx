@@ -104,7 +104,7 @@ export default function ManifestoPage() {
                     className="mt-24 text-center border-t border-white/10 pt-16"
                 >
                     <blockquote className="text-2xl md:text-3xl font-display italic text-gray-300 mb-6 max-w-3xl mx-auto">
-                        "{t("manifesto.quote")}"
+                        &ldquo;{t("manifesto.quote")}&rdquo;
                     </blockquote>
                     <p className="text-neon-red font-display tracking-widest text-sm">
                         — GEN-Z 212

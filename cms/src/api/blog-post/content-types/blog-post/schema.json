@@ -36,6 +36,9 @@
     "authorName": {
       "type": "string"
     },
+    "readingTime": {
+      "type": "integer"
+    },
     "featured": {
       "type": "boolean",
       "default": false

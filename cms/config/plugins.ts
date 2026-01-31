@@ -1,4 +1,4 @@
-export default () => ({
+const pluginsConfig = () => ({
   i18n: {
     enabled: true,
     config: {
@@ -7,3 +7,5 @@ export default () => ({
     },
   },
 });
+
+export default pluginsConfig;

@@ -1,7 +1,10 @@
 import path from 'path';
+import type { StrapiConfigContext } from './_types';
 
-export default ({ env }) => {
-  const client = env('DATABASE_CLIENT', 'sqlite');
+type DatabaseClient = 'mysql' | 'postgres' | 'sqlite';
+
+const databaseConfig = ({ env }: StrapiConfigContext) => {
+  const client = env('DATABASE_CLIENT', 'sqlite') as DatabaseClient;
 
   const connections = {
     mysql: {
@@ -58,3 +61,5 @@ export default ({ env }) => {
     },
   };
 };
+
+export default databaseConfig;

@@ -1,4 +1,6 @@
-export default ({ env }) => ({
+import type { StrapiConfigContext } from './_types';
+
+const adminConfig = ({ env }: StrapiConfigContext) => ({
   auth: {
     secret: env('ADMIN_JWT_SECRET'),
   },
@@ -18,3 +20,5 @@ export default ({ env }) => ({
     promoteEE: env.bool('FLAG_PROMOTE_EE', true),
   },
 });
+
+export default adminConfig;

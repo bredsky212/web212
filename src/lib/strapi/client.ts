@@ -1,21 +1,20 @@
-export type StrapiQueryValue =
-  | string
-  | number
-  | boolean
-  | null
-  | undefined
-  | StrapiQuery
-  | StrapiQueryValue[];
+import 'server-only';
 
+export type StrapiQueryPrimitive = string | number | boolean | null;
+export type StrapiQueryValue = StrapiQueryPrimitive | StrapiQueryArray | StrapiQueryObject;
+export type StrapiQueryArray = StrapiQueryValue[];
+export type StrapiQueryObject = { [key: string]: StrapiQueryValue };
 export type StrapiQuery = Record<string, StrapiQueryValue>;
 
 export type StrapiFetchOptions = {
   query?: StrapiQuery;
   locale?: string;
   auth?: boolean;
+  cache?: 'force-cache' | 'no-store';
+  revalidate?: number;
 };
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
+const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337';
 const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN;
 
 export const CMS_ENABLED = process.env.CMS_ENABLED === 'true';
@@ -69,8 +68,17 @@ export const getStrapiMediaUrl = (url?: string | null) => {
 };
 
 export async function strapiFetch<T>(path: string, options: StrapiFetchOptions = {}) {
-  const { query, locale, auth = true } = options;
+  const { query, locale, auth = true, cache, revalidate } = options;
   const normalizedPath = path.startsWith('/') ? path : `/api/${path}`;
+
+  if (process.env.NODE_ENV === 'production') {
+    if (!STRAPI_TOKEN) {
+      throw new Error('STRAPI_API_TOKEN is required in production to access Strapi.');
+    }
+    if (!auth) {
+      throw new Error('Unauthenticated Strapi requests are disabled in production.');
+    }
+  }
 
   const requestQuery: StrapiQuery = { ...query };
   if (locale) {
@@ -86,7 +94,17 @@ export async function strapiFetch<T>(path: string, options: StrapiFetchOptions =
     headers.Authorization = `Bearer ${STRAPI_TOKEN}`;
   }
 
-  const response = await fetch(url, { headers });
+  const fetchOptions: RequestInit & { next?: { revalidate?: number } } = { headers };
+
+  if (cache) {
+    fetchOptions.cache = cache;
+  }
+
+  if (typeof revalidate === 'number') {
+    fetchOptions.next = { revalidate };
+  }
+
+  const response = await fetch(url, fetchOptions);
 
   if (!response.ok) {
     const body = await response.text();

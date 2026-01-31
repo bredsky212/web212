@@ -2,11 +2,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogPageClient from "./BlogPageClient";
 import { CMS_ENABLED } from "@/lib/strapi/client";
-import { getBlogPosts } from "@/lib/strapi/blog";
-import { getLegacyBlogPosts } from "@/lib/strapi/legacy";
+import { getBlogPostPreviews } from "@/lib/strapi/blog.server";
+import { getLegacyBlogPostPreviews } from "@/lib/strapi/legacy";
 
 export default async function BlogPage() {
-    const posts = CMS_ENABLED ? await getBlogPosts() : await getLegacyBlogPosts();
+    const posts = CMS_ENABLED
+        ? await getBlogPostPreviews()
+        : await getLegacyBlogPostPreviews();
     const categories = Array.from(
         new Set(posts.map((post) => post.category?.name).filter(Boolean))
     ) as string[];

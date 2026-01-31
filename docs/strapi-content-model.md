@@ -10,6 +10,7 @@
 - content (blocks rich text)
 - category (relation -> BlogCategory, many-to-one)
 - authorName (string)
+- readingTime (integer)
 - featured (boolean)
 - coverImage (media, single image)
 - publishedAt (system field from Draft/Publish)

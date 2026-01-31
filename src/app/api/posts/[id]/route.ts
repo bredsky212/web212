@@ -14,6 +14,7 @@ export async function GET(_: Request, { params }: RouteParams) {
         }
         return NextResponse.json(post);
     } catch (error) {
+        console.error("Failed to fetch post", error);
         return NextResponse.json(
             { error: "Failed to fetch post" },
             { status: 500 }

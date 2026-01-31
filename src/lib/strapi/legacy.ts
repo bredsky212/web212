@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { headers } from 'next/headers';
-import type { BlogPost } from './blog';
+import type { BlogPost, BlogPostPreview } from './types';
 
 const slugify = (value: string) =>
   value
@@ -10,8 +10,8 @@ const slugify = (value: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
 
-const getBaseUrl = () => {
-  const headerList = headers();
+const getBaseUrl = async () => {
+  const headerList = await headers();
   const host = headerList.get('x-forwarded-host') || headerList.get('host');
   const proto = headerList.get('x-forwarded-proto') || 'http';
   if (!host) {
@@ -20,7 +20,23 @@ const getBaseUrl = () => {
   return `${proto}://${host}`;
 };
 
-const mapLegacyPost = (post: Record<string, any>): BlogPost => {
+type LegacyPost = {
+  _id?: string;
+  id?: string;
+  slug?: string;
+  title?: string;
+  excerpt?: string;
+  content?: string;
+  category?: string;
+  author?: string;
+  authorName?: string;
+  publishedAt?: string;
+  featured?: boolean;
+  imageUrl?: string;
+  readingTime?: number;
+};
+
+const mapLegacyPost = (post: LegacyPost): BlogPost => {
   const categoryName = post.category || 'Uncategorized';
   const category = {
     name: categoryName,
@@ -29,8 +45,8 @@ const mapLegacyPost = (post: Record<string, any>): BlogPost => {
 
   return {
     id: String(post._id || post.id || post.slug || ''),
-    slug: post.slug,
-    title: post.title,
+    slug: post.slug || '',
+    title: post.title || '',
     excerpt: post.excerpt,
     content: post.content,
     category,
@@ -38,12 +54,31 @@ const mapLegacyPost = (post: Record<string, any>): BlogPost => {
     publishedAt: post.publishedAt || null,
     featured: Boolean(post.featured),
     coverImageUrl: post.imageUrl || null,
+    readingTime: typeof post.readingTime === 'number' ? post.readingTime : null,
   };
 };
 
-export const getLegacyBlogPosts = async (): Promise<BlogPost[]> => {
+const mapLegacyPreview = (post: LegacyPost): BlogPostPreview => {
+  const full = mapLegacyPost(post);
+  return {
+    id: full.id,
+    documentId: full.documentId,
+    slug: full.slug,
+    title: full.title,
+    excerpt: full.excerpt,
+    category: full.category,
+    authorName: full.authorName,
+    publishedAt: full.publishedAt,
+    featured: full.featured,
+    coverImageUrl: full.coverImageUrl,
+    readingTime: full.readingTime,
+  };
+};
+
+const fetchLegacyPosts = async (): Promise<LegacyPost[]> => {
   try {
-    const response = await fetch(`${getBaseUrl()}/api/posts`, { cache: 'no-store' });
+    const baseUrl = await getBaseUrl();
+    const response = await fetch(`${baseUrl}/api/posts`, { cache: 'no-store' });
     if (!response.ok) {
       return [];
     }
@@ -51,14 +86,19 @@ export const getLegacyBlogPosts = async (): Promise<BlogPost[]> => {
     if (!Array.isArray(data)) {
       return [];
     }
-    return data.map(mapLegacyPost);
-  } catch (error) {
+    return data as LegacyPost[];
+  } catch {
     return [];
   }
 };
 
+export const getLegacyBlogPostPreviews = async (): Promise<BlogPostPreview[]> => {
+  const posts = await fetchLegacyPosts();
+  return posts.map(mapLegacyPreview);
+};
+
 export const getLegacyBlogPostBySlug = async (slug: string): Promise<BlogPost | null> => {
-  const posts = await getLegacyBlogPosts();
+  const posts = await fetchLegacyPosts();
   const found = posts.find((post) => post.slug === slug);
-  return found || null;
+  return found ? mapLegacyPost(found) : null;
 };

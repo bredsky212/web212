@@ -125,7 +125,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-2xl md:text-3xl font-display italic text-[var(--text-secondary)] mb-6"
           >
-            "{t("quote")}"
+            &ldquo;{t("quote")}&rdquo;
           </motion.blockquote>
           <p className="text-neon-red font-display tracking-widest text-sm">
             — GEN-Z 212

@@ -4,13 +4,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from "framer-motion";
 
 export function ThemeToggle() {
-    const { theme, toggleTheme, mounted } = useTheme();
-
-    if (!mounted) {
-        return (
-            <div className="p-2 w-9 h-9 rounded-lg border border-[var(--border)]" />
-        );
-    }
+    const { theme, toggleTheme } = useTheme();
 
     return (
         <motion.button

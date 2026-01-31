@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { BlocksRenderer } from "@strapi/blocks-react-renderer";
-import type { BlogPost } from "@/lib/strapi/blog";
+import { BlocksRenderer, type BlocksContent } from "@strapi/blocks-react-renderer";
+import type { BlogPost } from "@/lib/strapi/types";
 
 function formatDate(value?: string | null) {
     if (!value) {
@@ -35,11 +36,13 @@ export default function BlogPostClient({ post }: { post: BlogPost }) {
                 </Link>
 
                 {post.coverImageUrl && (
-                    <div className="mb-10 overflow-hidden rounded">
-                        <img
+                    <div className="mb-10 overflow-hidden rounded relative h-72">
+                        <Image
                             src={post.coverImageUrl}
                             alt={post.title}
-                            className="w-full h-72 object-cover"
+                            fill
+                            sizes="(min-width: 1024px) 768px, 100vw"
+                            className="object-cover"
                         />
                     </div>
                 )}
@@ -56,7 +59,7 @@ export default function BlogPostClient({ post }: { post: BlogPost }) {
 
                 <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-12 pb-8 border-b border-white/10">
                     {post.authorName && <span>By {post.authorName}</span>}
-                    {post.authorName && formattedDate && <span>•</span>}
+                    {post.authorName && formattedDate && <span>â€¢</span>}
                     {formattedDate && <span>{formattedDate}</span>}
                 </div>
 
@@ -67,7 +70,7 @@ export default function BlogPostClient({ post }: { post: BlogPost }) {
                         </p>
                     )}
                     {hasBlocks ? (
-                        <BlocksRenderer content={post.content as any} />
+                        <BlocksRenderer content={post.content as BlocksContent} />
                     ) : (
                         <div className="text-gray-400 leading-relaxed whitespace-pre-line">
                             {post.content as string}

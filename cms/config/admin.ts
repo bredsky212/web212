@@ -1,23 +1,23 @@
-import type { StrapiConfigContext } from './_types';
+import type { EnvFn } from './_types';
 
-const adminConfig = ({ env }: StrapiConfigContext) => ({
+const adminConfig = ({ env }: { env: EnvFn }) => ({
   auth: {
-    secret: env('ADMIN_JWT_SECRET'),
+    secret: env<string>('ADMIN_JWT_SECRET'),
   },
   apiToken: {
-    salt: env('API_TOKEN_SALT'),
+    salt: env<string>('API_TOKEN_SALT'),
   },
   transfer: {
     token: {
-      salt: env('TRANSFER_TOKEN_SALT'),
+      salt: env<string>('TRANSFER_TOKEN_SALT'),
     },
   },
   secrets: {
-    encryptionKey: env('ENCRYPTION_KEY'),
+    encryptionKey: env<string>('ENCRYPTION_KEY'),
   },
   flags: {
-    nps: env.bool('FLAG_NPS', true),
-    promoteEE: env.bool('FLAG_PROMOTE_EE', true),
+    nps: env<boolean>('FLAG_NPS', true),
+    promoteEE: env<boolean>('FLAG_PROMOTE_EE', true),
   },
 });
 

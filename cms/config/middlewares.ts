@@ -1,7 +1,7 @@
-import type { StrapiConfigContext } from './_types';
+import type { EnvFn } from './_types';
 
-const middlewaresConfig = ({ env }: StrapiConfigContext) => {
-  const origins = (env('CORS_ORIGINS', '') as string)
+const middlewaresConfig = ({ env }: { env: EnvFn }) => {
+  const origins = env<string>('CORS_ORIGINS', '')
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean);

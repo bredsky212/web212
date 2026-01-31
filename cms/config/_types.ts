@@ -1,7 +1,3 @@
-﻿export type EnvFn = {
-  (key: string, defaultValue?: unknown): unknown;
-  bool: (key: string, defaultValue?: boolean) => boolean;
-  int: (key: string, defaultValue?: number) => number;
-  array: (key: string, defaultValue?: string[]) => string[];
-};
-export type StrapiConfigContext = { env: EnvFn };
+// Shared typing for Strapi config env() helper.
+// Generic allows env<string>(..., default) and inference from default value.
+export type EnvFn = <T = unknown>(key: string, defaultValue?: T) => T;

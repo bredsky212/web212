@@ -156,6 +156,10 @@ export const getBlogPostPreviews = async (locale?: string) => {
     revalidate: 60,
   });
 
+  if (!response) {
+    return null;
+  }
+
   return response.data
     .map((entry) => mapBlogPostPreview(entry))
     .filter((entry): entry is BlogPostPreview => Boolean(entry));
@@ -183,6 +187,10 @@ export const getBlogPostBySlug = async (slug: string, locale?: string) => {
     locale,
     revalidate: 300,
   });
+
+  if (!response) {
+    return null;
+  }
 
   const first = response.data[0];
   return mapBlogPost(first);

@@ -67,7 +67,11 @@ export const getStrapiMediaUrl = (url?: string | null) => {
   return `${STRAPI_URL}${url}`;
 };
 
-export async function strapiFetch<T>(path: string, options: StrapiFetchOptions = {}) {
+const isBuildPhase = () =>
+  process.env.NEXT_PHASE === 'phase-production-build' ||
+  process.env.NEXT_PHASE === 'phase-production-export';
+
+export async function strapiFetch<T>(path: string, options: StrapiFetchOptions = {}): Promise<T | null> {
   const { query, locale, auth = true, cache, revalidate } = options;
   const normalizedPath = path.startsWith('/') ? path : `/api/${path}`;
 
@@ -104,12 +108,26 @@ export async function strapiFetch<T>(path: string, options: StrapiFetchOptions =
     fetchOptions.next = { revalidate };
   }
 
-  const response = await fetch(url, fetchOptions);
+  try {
+    const response = await fetch(url, fetchOptions);
 
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`Strapi request failed (${response.status}): ${body}`);
+    if (response.status === 404) {
+      return null;
+    }
+
+    if (!response.ok) {
+      if (isBuildPhase()) {
+        return null;
+      }
+      const body = await response.text();
+      throw new Error(`Strapi request failed (${response.status}): ${body}`);
+    }
+
+    return (await response.json()) as T;
+  } catch (error) {
+    if (isBuildPhase()) {
+      return null;
+    }
+    throw error;
   }
-
-  return (await response.json()) as T;
 }

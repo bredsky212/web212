@@ -2,16 +2,22 @@
 
 Next.js site with a Strapi CMS backend (v5) for editorial content.
 
-## Local Development
+## Local Development (Token-Only)
 
 1) Web app env
 
    - Copy `.env.example` to `.env.local` and fill in required values.
+   - For Strapi mode, set:
+     - `CMS_ENABLED=true`
+     - `STRAPI_URL=http://localhost:1337`
+     - `STRAPI_API_TOKEN=...` (read-only token)
+   - If you keep `CMS_ENABLED=false`, you must also set legacy Mongo values.
 
 2) Strapi env
 
    - Copy `cms/.env.example` to `cms/.env` and fill in secrets.
    - Set `APP_KEYS` as a comma-separated list (4 values is typical).
+   - Set `CORS_ORIGINS=http://localhost:3000` for local dev.
 
 3) Start Postgres + Strapi (Docker)
 
@@ -30,25 +36,22 @@ Next.js site with a Strapi CMS backend (v5) for editorial content.
    - `npm install`
    - `npm run dev`
 
-6) Strapi setup
+6) Strapi setup (token-only)
 
    - Create the Strapi admin user.
-   - Create BlogCategory and BlogPost entries.
-   - Optional: create an API Token and set `STRAPI_API_TOKEN` in `.env.local`.
+   - Create a **read-only API Token** and set it in `.env.local` as `STRAPI_API_TOKEN`.
+   - In Settings → Roles & Permissions → Public, **remove all permissions** for blog types.
+   - Create BlogCategory and BlogPost entries and **publish** them.
 
 7) Visit `/blog`
 
-   - Set `CMS_ENABLED=true` in `.env.local` to render the blog from Strapi.
-   - Keep `CMS_ENABLED=false` to use the legacy API.
-
-## Strapi Access Strategy
-
-- Dev: you may enable public GET permissions for Blog endpoints.
-- Prod: lock down public permissions and use an API Token (`STRAPI_API_TOKEN`) for reads.
+   - With `CMS_ENABLED=true`, the blog renders from Strapi using the server-side token.
 
 ## Production Notes
 
-- Put Strapi behind HTTPS.
-- Lock down CORS to only allow your web domain.
+- Use HTTPS for both Strapi and the website.
+- Keep `STRAPI_API_TOKEN` on the server only; never expose it via `NEXT_PUBLIC_*`.
+- Lock down Strapi Public permissions (no blog access).
+- Configure `CORS_ORIGINS` to your web domain(s).
+- If possible, restrict Strapi API access to your web server IPs.
 - Do not expose the Strapi admin panel publicly without protection.
-- Prefer token-based read access for the public site.

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:utf8": "python3 scripts/check-utf8.py"
   },
   "dependencies": {
     "@strapi/blocks-react-renderer": "^1.0.2",

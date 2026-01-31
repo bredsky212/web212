@@ -14,6 +14,7 @@ export async function GET(_: Request, { params }: RouteParams) {
         }
         return NextResponse.json(event);
     } catch (error) {
+        console.error("Failed to fetch timeline event", error);
         return NextResponse.json(
             { error: "Failed to fetch event" },
             { status: 500 }

@@ -8,6 +8,7 @@ export async function GET() {
         const events = await TimelineEvent.find().sort({ order: 1 });
         return NextResponse.json(events);
     } catch (error) {
+        console.error("Failed to fetch timeline events", error);
         return NextResponse.json(
             { error: "Failed to fetch timeline events" },
             { status: 500 }

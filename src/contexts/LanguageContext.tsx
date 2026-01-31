@@ -32,19 +32,17 @@ interface LanguageContextType {
     setLang: (code: string) => void;
     t: (key: string) => string;
     dir: "ltr" | "rtl";
-    mounted: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
     const [lang, setLangState] = useState("en");
-    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
         const stored = localStorage.getItem("genz212-lang");
         if (stored && translations[stored]) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setLangState(stored);
         }
     }, []);
@@ -61,7 +59,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <LanguageContext.Provider value={{ lang, setLang, t, dir: currentLang.dir as "ltr" | "rtl", mounted }}>
+        <LanguageContext.Provider value={{ lang, setLang, t, dir: currentLang.dir as "ltr" | "rtl" }}>
             {children}
         </LanguageContext.Provider>
     );

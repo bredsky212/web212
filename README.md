@@ -8,7 +8,8 @@ Next.js site with a Strapi CMS backend (v5) for editorial content.
 
    - Copy `.env.example` to `.env.local` and fill in required values.
    - For Strapi mode, set:
-     - `STRAPI_DEBUG=1` (optional; logs Strapi requests)     - `CMS_ENABLED=true`
+     - `STRAPI_DEBUG=1` (optional; logs Strapi requests)
+     - `CMS_ENABLED=true`
      - `STRAPI_URL=http://localhost:1337`
      - `STRAPI_PUBLIC_URL=` (optional; set in prod for public media URLs)
      - `STRAPI_API_TOKEN=...` (read-only token)
@@ -56,6 +57,12 @@ Next.js site with a Strapi CMS backend (v5) for editorial content.
 - Non-prefixed routes (`/blog`) read the cookie.
 - Prefixed routes (`/ar/blog`, `/fr/blog`, `/en/blog`) **force** locale and update the cookie.
 - The header language switcher navigates to prefixed routes.
+
+### Blog locale troubleshooting
+
+- Set `STRAPI_DEBUG=1` to verify the exact Strapi URL (including `locale=`) the server is calling.
+- Ensure every locale has a **slug**; missing slugs can cause Strapi to return the first post in the locale.
+- If a translation doesn’t exist, the app will redirect to the default locale (`/ar/...`) or show not found.
 
 
 ## Strapi locale smoke test

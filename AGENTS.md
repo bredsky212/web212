@@ -57,7 +57,7 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - **Client components must never import server-only modules**. Use `src/lib/strapi/types.ts` for shared types.
 - `STRAPI_API_TOKEN` is required in **production** and never exposed via `NEXT_PUBLIC_*`.
 - Blog list uses preview fields (no blocks). Blog detail loads full blocks.
-- Blog responses now include `locale` and `localizations` for i18n linking.
+- Blog responses include `locale` for i18n routing; localizations are not populated (Strapi v5 validation rejects `populate=localizations`).
 
 
 ## Blog i18n Routing
@@ -67,6 +67,12 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - Non-prefixed routes (`/blog`) read the cookie; prefixed routes (`/ar/blog`, `/fr/blog`, `/en/blog`) override it and also persist the cookie.
 - Locale helpers: `src/lib/i18n/locales.ts` and `src/lib/i18n/locale.ts`.
 - Prefixed pages live in `src/app/[locale]/blog/*`.
+
+### Lessons learned
+
+- Always verify Strapi requests with `STRAPI_DEBUG=1` when locale issues appear.
+- If a blog **slug** is missing, Strapi filters drop and the API can return the first post in that locale.
+- Prefer prefixed URLs (`/ar|fr|en`) for shareable, deterministic blog routes.
 
 ## Caching / Revalidate
 

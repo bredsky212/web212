@@ -26,7 +26,7 @@ if (strapiPublicUrl) {
   try {
     const url = new URL(strapiPublicUrl);
     const pattern: RemotePattern = {
-      protocol: url.protocol.replace(":", ""),
+      protocol: url.protocol.replace(":", "") as "http" | "https",
       hostname: url.hostname,
       pathname: "/**",
       ...(url.port ? { port: url.port } : {}),

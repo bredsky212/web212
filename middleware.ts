@@ -12,6 +12,13 @@ export function middleware(req: NextRequest) {
       const stripped = pathname.replace(`/${segment}`, '') || '/';
       url.pathname = stripped;
       url.searchParams.set('locale', segment);
+      const parts = pathname.split('/');
+      if (parts.length > 3) {
+        const slug = parts.slice(3).join('/');
+        if (slug) {
+          url.searchParams.set('slug', slug);
+        }
+      }
       const res = NextResponse.rewrite(url);
       res.cookies.set(LOCALE_COOKIE_NAME, segment, {
         path: '/',

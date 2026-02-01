@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 type PageProps = {
     params: { slug: string };
-    searchParams?: { locale?: string };
+    searchParams?: { locale?: string; slug?: string };
 };
 
 const buildBlogAlternates = (slug: string) => ({
@@ -34,19 +34,30 @@ const resolveLocale = async (searchParams?: { locale?: string }) => {
     return getCookieLocale();
 };
 
+const resolveSlug = (params: { slug: string }, searchParams?: { slug?: string }) => {
+    if (typeof params.slug === "string" && params.slug) {
+        return params.slug;
+    }
+    if (typeof searchParams?.slug === "string" && searchParams.slug) {
+        return searchParams.slug;
+    }
+    return "";
+};
+
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
     const locale = await resolveLocale(searchParams);
+    const slug = resolveSlug(params, searchParams);
 
     return {
         alternates: {
-            canonical: `/${locale}/blog/${params.slug}`,
-            ...buildBlogAlternates(params.slug),
+            canonical: `/${locale}/blog/${slug}`,
+            ...buildBlogAlternates(slug),
         },
     };
 }
 
 export default async function BlogPostPage({ params, searchParams }: PageProps) {
-    const slug = typeof params.slug === "string" ? params.slug : "";
+    const slug = resolveSlug(params, searchParams);
     if (!slug) {
         return (
             <main className="min-h-screen bg-black text-white">

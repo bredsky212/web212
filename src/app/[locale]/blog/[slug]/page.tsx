@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import BlogPostClient from "./BlogPostClient";
+import BlogPostClient from "@/app/blog/[slug]/BlogPostClient";
 import { CMS_ENABLED } from "@/lib/strapi/client";
 import { getBlogPostBySlug, getBlogPostLocaleBySlug } from "@/lib/strapi/blog.server";
 import { getLegacyBlogPostBySlug } from "@/lib/strapi/legacy";
 import Link from "next/link";
-import { getCookieLocale } from "@/lib/i18n/locale";
-import { redirect } from "next/navigation";
+import { normalizeLocale } from "@/lib/i18n/locales";
+import { notFound, redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 type PageProps = {
-    params: { slug: string };
+    params: { locale: string; slug: string };
 };
 
 const buildBlogAlternates = (slug: string) => ({
@@ -24,7 +24,7 @@ const buildBlogAlternates = (slug: string) => ({
 });
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const locale = getCookieLocale();
+    const locale = normalizeLocale(params.locale);
 
     return {
         alternates: {
@@ -35,7 +35,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
-    const locale = getCookieLocale();
+    const locale = normalizeLocale(params.locale);
+    if (locale !== params.locale) {
+        notFound();
+    }
+
     const post = CMS_ENABLED
         ? await getBlogPostBySlug(params.slug, locale)
         : await getLegacyBlogPostBySlug(params.slug);
@@ -56,7 +60,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                     <p className="text-gray-500 mb-8">
                         The article you&apos;re looking for doesn&apos;t exist.
                     </p>
-                    <Link href="/blog" className="text-neon-red hover:underline">
+                    <Link href={`/${locale}/blog`} className="text-neon-red hover:underline">
                         &lt;- Back to Blog
                     </Link>
                 </div>
@@ -68,7 +72,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     return (
         <main className="min-h-screen bg-black text-white selection:bg-neon-red selection:text-white">
             <Navbar />
-            <BlogPostClient post={post} backHref="/blog" />
+            <BlogPostClient post={post} backHref={`/${locale}/blog`} />
             <Footer />
         </main>
     );

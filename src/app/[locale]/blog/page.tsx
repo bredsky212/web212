@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import BlogPageClient from "./BlogPageClient";
+import BlogPageClient from "@/app/blog/BlogPageClient";
 import { CMS_ENABLED } from "@/lib/strapi/client";
 import { getBlogPostPreviews } from "@/lib/strapi/blog.server";
 import { getLegacyBlogPostPreviews } from "@/lib/strapi/legacy";
-import { getCookieLocale } from "@/lib/i18n/locale";
+import { normalizeLocale } from "@/lib/i18n/locales";
+import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
+
+type PageProps = {
+    params: { locale: string };
+};
 
 const buildBlogAlternates = () => ({
     languages: {
@@ -17,8 +22,8 @@ const buildBlogAlternates = () => ({
     },
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-    const locale = getCookieLocale();
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const locale = normalizeLocale(params.locale);
 
     return {
         alternates: {
@@ -28,8 +33,12 @@ export async function generateMetadata(): Promise<Metadata> {
     };
 }
 
-export default async function BlogPage() {
-    const locale = getCookieLocale();
+export default async function BlogPage({ params }: PageProps) {
+    const locale = normalizeLocale(params.locale);
+    if (locale !== params.locale) {
+        notFound();
+    }
+
     const posts = CMS_ENABLED
         ? await getBlogPostPreviews(locale)
         : await getLegacyBlogPostPreviews();
@@ -43,7 +52,11 @@ export default async function BlogPage() {
             <Navbar />
 
             <div className="container mx-auto px-4 py-32 max-w-6xl">
-                <BlogPageClient posts={safePosts} categories={categories} basePath="/blog" />
+                <BlogPageClient
+                    posts={safePosts}
+                    categories={categories}
+                    basePath={`/${locale}/blog`}
+                />
             </div>
 
             <Footer />

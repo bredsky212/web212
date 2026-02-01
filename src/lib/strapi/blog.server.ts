@@ -30,6 +30,7 @@ type StrapiBlogPost = StrapiEntity & {
   publishedAt?: string;
   featured?: boolean;
   readingTime?: number;
+  locale?: string;
   category?: unknown;
   coverImage?: unknown;
 };
@@ -153,7 +154,7 @@ export const getBlogPostPreviews = async (locale?: string) => {
   const response = await strapiFetch<StrapiCollectionResponse<StrapiEntity>>('blog-posts', {
     query,
     locale,
-    revalidate: 60,
+    cache: 'no-store',
   });
 
   if (!response) {
@@ -185,7 +186,7 @@ export const getBlogPostBySlug = async (slug: string, locale?: string) => {
   const response = await strapiFetch<StrapiCollectionResponse<StrapiEntity>>('blog-posts', {
     query,
     locale,
-    revalidate: 300,
+    cache: 'no-store',
   });
 
   if (!response) {
@@ -194,4 +195,36 @@ export const getBlogPostBySlug = async (slug: string, locale?: string) => {
 
   const first = response.data[0];
   return mapBlogPost(first);
+};
+
+export const getBlogPostLocaleBySlug = async (slug: string) => {
+  const query: StrapiQuery = {
+    filters: { slug: { $eq: slug } },
+    pagination: { pageSize: 1 },
+    fields: ['slug', 'locale'],
+  };
+
+  const response = await strapiFetch<StrapiCollectionResponse<StrapiEntity>>('blog-posts', {
+    query,
+    locale: 'all',
+    cache: 'no-store',
+  });
+
+  if (!response) {
+    return null;
+  }
+
+  const first = normalizeEntity(response.data[0]) as StrapiBlogPost | null;
+  if (!first) {
+    return null;
+  }
+
+  const resolvedLocale = typeof first.locale === 'string' ? first.locale : null;
+  const resolvedSlug = typeof first.slug === 'string' ? first.slug : null;
+
+  if (!resolvedLocale || !resolvedSlug) {
+    return null;
+  }
+
+  return { locale: resolvedLocale, slug: resolvedSlug };
 };

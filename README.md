@@ -66,6 +66,13 @@ Run on the server to verify Strapi i18n responses:
 
 Expected output includes locale + title for `ar`, `fr`, `en`.
 
+
+## Strapi as code (localization)
+
+- Blog localization is defined in schema files under `cms/src/api/**/schema.json`.
+- Do not toggle localization in the admin without committing schema changes, or it will drift on rebuild.
+- Use `scripts/check-strapi-i18n.sh` to verify localization is still enabled in git.
+
 ## Production Notes
 
 - Use HTTPS for both Strapi and the website.

@@ -109,6 +109,13 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - Language switcher: `src/components/LanguageSwitcher.tsx` (wired in `src/components/Navbar.tsx`)
 - Locale middleware: `middleware.ts`
 
+
+## Strapi as Code (i18n)
+
+- Localization is stored in schema files under `cms/src/api/**/schema.json`.
+- If localization is toggled in admin, you must commit the updated schemas or it will be lost on rebuild.
+- Check with `scripts/check-strapi-i18n.sh`.
+
 ## Safety Notes
 
 - Do **not** re-enable write handlers on legacy API routes unless explicitly requested.

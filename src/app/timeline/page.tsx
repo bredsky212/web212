@@ -67,7 +67,7 @@ export default function TimelinePage() {
                     transition={{ duration: 0.8 }}
                     className="text-center mb-20"
                 >
-                    <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-b from-[var(--foreground)] to-[var(--text-secondary)]">
+                    <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-[var(--text-primary)]">
                         {t("timeline.title").split(" ")[0]} <span className="text-neon-red">{t("timeline.title").split(" ").slice(1).join(" ")}</span>
                     </h1>
                     <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">

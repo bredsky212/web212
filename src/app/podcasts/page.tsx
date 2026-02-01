@@ -32,7 +32,7 @@ export default function PodcastsPage() {
                     transition={{ duration: 0.8 }}
                     className="text-center mb-16"
                 >
-                    <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-b from-[var(--foreground)] to-[var(--text-secondary)]">
+                    <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-[var(--text-primary)]">
                         <span className="text-neon-red">{t("podcasts.title").split(" ")[0]}</span> {t("podcasts.title").split(" ").slice(1).join(" ")}
                     </h1>
                     <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">

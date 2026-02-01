@@ -25,7 +25,7 @@ export default function HistoryPage() {
                     transition={{ duration: 0.8 }}
                     className="text-center mb-24"
                 >
-                    <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-b from-[var(--foreground)] to-[var(--text-secondary)]">
+                    <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-[var(--text-primary)]">
                         {t("history.title").split(" & ")[0]} & <span className="text-neon-red">{t("history.title").split(" & ")[1]}</span>
                     </h1>
                     <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">

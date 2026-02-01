@@ -24,7 +24,8 @@ const buildBlogAlternates = (slug: string) => ({
 });
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const rawLocale = params.locale.toLowerCase();
+    const rawLocale =
+        typeof params.locale === "string" ? params.locale.toLowerCase() : "";
     const locale = isSupportedLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
 
     return {
@@ -36,7 +37,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
-    const rawLocale = params.locale.toLowerCase();
+    const rawLocale =
+        typeof params.locale === "string" ? params.locale.toLowerCase() : "";
     if (!isSupportedLocale(rawLocale)) {
         notFound();
     }

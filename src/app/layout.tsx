@@ -12,7 +12,7 @@ const inter = Inter({
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
 });
 
 const notoArabic = Noto_Sans_Arabic({

@@ -185,14 +185,11 @@ export const getBlogPostPreviews = async (locale?: string) => {
       'publishedAt',
       'authorName',
       'readingTime',
-      'locale',
     ],
     populate: {
       category: true,
       coverImage: true,
-      localizations: {
-        fields: ['slug', 'locale', 'documentId'],
-      },
+      localizations: true,
     },
   };
 
@@ -232,7 +229,6 @@ export const getBlogPostBySlug = async (slug: string, locale?: string) => {
       'publishedAt',
       'authorName',
       'readingTime',
-      'locale',
     ],
   };
 

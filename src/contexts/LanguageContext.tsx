@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { translations } from "@/i18n";
+import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, isSupportedLocale } from "@/lib/i18n/locales";
 
 export const languages = [
     { code: "en", name: "English", dir: "ltr" },
@@ -37,9 +38,20 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-    const [lang, setLangState] = useState("en");
+    const [lang, setLangState] = useState(DEFAULT_LOCALE);
 
     useEffect(() => {
+        const cookieMatch = document.cookie.match(
+            new RegExp(`(?:^|; )${LOCALE_COOKIE_NAME}=([^;]*)`)
+        );
+        const cookieLocale = cookieMatch ? decodeURIComponent(cookieMatch[1]) : null;
+
+        if (cookieLocale && translations[cookieLocale]) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setLangState(cookieLocale);
+            return;
+        }
+
         const stored = localStorage.getItem("genz212-lang");
         if (stored && translations[stored]) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -52,6 +64,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     const setLang = (code: string) => {
         setLangState(code);
         localStorage.setItem("genz212-lang", code);
+        if (isSupportedLocale(code)) {
+            document.cookie = `${LOCALE_COOKIE_NAME}=${encodeURIComponent(code)}; path=/; max-age=31536000; samesite=lax`;
+        }
     };
 
     const t = (key: string): string => {

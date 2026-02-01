@@ -300,6 +300,18 @@ export const getBlogPostLocaleBySlug = async (slug: string) => {
   }
 
   if (process.env.STRAPI_DEBUG === '1') {
+    console.warn('[STRAPI] slug filter lookup failed, falling back to list scan');
+  }
+
+  for (const candidateLocale of SUPPORTED_LOCALES) {
+    const previews = await getBlogPostPreviews(candidateLocale);
+    const match = previews?.find((entry) => entry.slug === slug);
+    if (match) {
+      return { locale: candidateLocale, slug: match.slug };
+    }
+  }
+
+  if (process.env.STRAPI_DEBUG === '1') {
     console.warn('[STRAPI] slug not found in any locale', slug);
   }
 

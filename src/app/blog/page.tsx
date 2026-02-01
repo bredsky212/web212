@@ -43,7 +43,7 @@ export default async function BlogPage() {
             <Navbar />
 
             <div className="container mx-auto px-4 py-32 max-w-6xl">
-                <BlogPageClient posts={safePosts} categories={categories} basePath="/blog" />
+                <BlogPageClient posts={safePosts} categories={categories} basePath={`/${locale}/blog`} />
             </div>
 
             <Footer />

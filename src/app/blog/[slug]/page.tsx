@@ -86,7 +86,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     return (
         <main className="min-h-screen bg-black text-white selection:bg-neon-red selection:text-white">
             <Navbar />
-            <BlogPostClient post={post} backHref="/blog" />
+            <BlogPostClient post={post} backHref={`/${locale}/blog`} />
             <Footer />
         </main>
     );

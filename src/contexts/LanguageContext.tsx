@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { translations } from "@/i18n";
-import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, isSupportedLocale } from "@/lib/i18n/locales";
+import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, isSupportedLocale, type SupportedLocale } from "@/lib/i18n/locales";
 
 export const languages = [
     { code: "en", name: "English", dir: "ltr" },
@@ -38,7 +38,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-    const [lang, setLangState] = useState(DEFAULT_LOCALE);
+    const [lang, setLangState] = useState<SupportedLocale>(DEFAULT_LOCALE);
 
     useEffect(() => {
         const cookieMatch = document.cookie.match(
@@ -48,25 +48,26 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
         if (cookieLocale && translations[cookieLocale]) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
-            setLangState(cookieLocale);
+            setLangState(cookieLocale as SupportedLocale);
             return;
         }
 
         const stored = localStorage.getItem("genz212-lang");
         if (stored && translations[stored]) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
-            setLangState(stored);
+            setLangState(stored as SupportedLocale);
         }
     }, []);
 
     const currentLang = languages.find((l) => l.code === lang) || languages[0];
 
     const setLang = (code: string) => {
+        if (!isSupportedLocale(code)) {
+            return;
+        }
         setLangState(code);
         localStorage.setItem("genz212-lang", code);
-        if (isSupportedLocale(code)) {
-            document.cookie = `${LOCALE_COOKIE_NAME}=${encodeURIComponent(code)}; path=/; max-age=31536000; samesite=lax`;
-        }
+        document.cookie = `${LOCALE_COOKIE_NAME}=${encodeURIComponent(code)}; path=/; max-age=31536000; samesite=lax`;
     };
 
     const t = (key: string): string => {

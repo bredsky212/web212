@@ -244,16 +244,55 @@ export const getBlogPostBySlug = async (slug: string, locale?: string) => {
     cache: 'no-store',
   });
 
-  if (!response) {
-    return null;
+  if (response && response.data.length > 0) {
+    const first = response.data[0];
+    const post = mapBlogPost(first, locale);
+    if (post && locale && post.locale !== locale) {
+      return null;
+    }
+    return post;
   }
 
-  const first = response.data[0];
-  const post = mapBlogPost(first, locale);
-  if (post && locale && post.locale !== locale) {
-    return null;
+  if (process.env.STRAPI_DEBUG === '1') {
+    console.warn('[STRAPI] slug filter returned no results', { slug, locale });
   }
-  return post;
+
+  if (locale) {
+    const previews = await getBlogPostPreviews(locale);
+    const match = previews?.find((entry) => entry.slug === slug);
+    if (match?.documentId) {
+      const byDocumentId: StrapiQuery = {
+        filters: { documentId: { $eq: match.documentId } },
+        populate: {
+          category: true,
+          coverImage: true,
+        },
+        pagination: { pageSize: 1 },
+        fields: [
+          'documentId',
+          'slug',
+          'title',
+          'excerpt',
+          'content',
+          'featured',
+          'publishedAt',
+          'authorName',
+          'readingTime',
+          'locale',
+        ],
+      };
+      const fallback = await strapiFetch<StrapiCollectionResponse<StrapiEntity>>('blog-posts', {
+        query: byDocumentId,
+        locale,
+        cache: 'no-store',
+      });
+      if (fallback && fallback.data.length > 0) {
+        return mapBlogPost(fallback.data[0], locale);
+      }
+    }
+  }
+
+  return null;
 };
 
 export const getBlogPostLocaleBySlug = async (slug: string) => {

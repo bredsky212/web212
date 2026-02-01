@@ -2,8 +2,8 @@ const pluginsConfig = () => ({
   i18n: {
     enabled: true,
     config: {
-      locales: ['en'],
-      defaultLocale: 'en',
+      locales: ['ar', 'fr', 'en'],
+      defaultLocale: 'ar',
     },
   },
 });

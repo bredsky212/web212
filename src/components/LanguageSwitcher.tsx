@@ -72,7 +72,11 @@ export function LanguageSwitcher() {
     setLang(locale);
 
     if (isBlogPath(pathname)) {
-      router.push(buildPrefixedPath(pathname, locale));
+      const target = buildPrefixedPath(pathname, locale);
+      if (target !== pathname) {
+        router.push(target);
+      }
+      router.refresh();
       return;
     }
 

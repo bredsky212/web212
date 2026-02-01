@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import type { BlogPostPreview } from "@/lib/strapi/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface BlogPageClientProps {
     posts: BlogPostPreview[];
@@ -27,10 +28,12 @@ function BlogCard({
     post,
     index,
     basePath,
+    featuredLabel,
 }: {
     post: BlogPostPreview;
     index: number;
     basePath: string;
+    featuredLabel: string;
 }) {
     const formattedDate = formatDate(post.publishedAt);
 
@@ -42,7 +45,7 @@ function BlogCard({
             className="group"
         >
             <Link href={`${basePath}/${post.slug}`}>
-                <div className="bg-gradient-to-br from-gray-900/60 to-black border border-white/10 rounded-lg p-6 h-full hover:border-neon-red/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(139,0,0,0.1)]">
+                <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-6 h-full hover:border-[var(--accent)]/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(139,0,0,0.1)]">
                     {post.coverImageUrl && (
                         <div className="mb-4 overflow-hidden rounded relative h-40">
                             <Image
@@ -56,11 +59,11 @@ function BlogCard({
                     )}
                     {post.featured && (
                         <span className="inline-block px-2 py-1 text-xs bg-neon-red/20 text-neon-red border border-neon-red/30 rounded mb-4 uppercase tracking-widest font-display">
-                            Featured
+                            {featuredLabel}
                         </span>
                     )}
                     {post.category?.name && (
-                        <span className="text-xs text-gray-500 uppercase tracking-widest block mb-2">
+                        <span className="text-xs text-[var(--text-muted)] uppercase tracking-widest block mb-2">
                             {post.category.name}
                         </span>
                     )}
@@ -68,12 +71,12 @@ function BlogCard({
                         {post.title}
                     </h3>
                     {post.excerpt && (
-                        <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                        <p className="text-[var(--text-secondary)] text-sm mb-4 line-clamp-2">
                             {post.excerpt}
                         </p>
                     )}
                     {formattedDate && (
-                        <div className="text-xs text-gray-500">{formattedDate}</div>
+                        <div className="text-xs text-[var(--text-muted)]">{formattedDate}</div>
                     )}
                 </div>
             </Link>
@@ -86,6 +89,10 @@ export default function BlogPageClient({
     categories,
     basePath = "/blog",
 }: BlogPageClientProps) {
+    const { t } = useLanguage();
+    const titlePrimary = t("blog.title.primary").trim();
+    const titleAccent = t("blog.title.accent").trim();
+    const featuredLabel = t("blog.featured");
     const [activeCategory, setActiveCategory] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -119,11 +126,12 @@ export default function BlogPageClient({
                 transition={{ duration: 0.8 }}
                 className="text-center mb-16"
             >
-                <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500">
-                    THE <span className="text-neon-red">BLOG</span>
+                <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-[var(--text-primary)]">
+                    {titlePrimary ? `${titlePrimary} ` : ""}
+                    {titleAccent ? <span className="text-neon-red">{titleAccent}</span> : null}
                 </h1>
-                <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                    Updates, analysis, and voices from the GenZ 212 movement.
+                <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
+                    {t("blog.subtitle")}
                 </p>
             </motion.div>
 
@@ -137,21 +145,21 @@ export default function BlogPageClient({
                 <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
                     <input
                         type="text"
-                        placeholder="Search articles..."
+                        placeholder={t("blog.searchPlaceholder")}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full md:w-80 px-4 py-3 bg-gray-900 border border-white/10 rounded-sm text-white placeholder-gray-500 focus:outline-none focus:border-neon-red transition-colors"
+                        className="w-full md:w-80 px-4 py-3 bg-[var(--surface)] border border-[var(--border)] rounded-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] transition-colors"
                     />
                     <div className="flex flex-wrap gap-2 justify-center">
                         <button
                             onClick={() => setActiveCategory(null)}
                             className={`px-4 py-2 text-xs uppercase tracking-widest border rounded-sm transition-all ${
                                 !activeCategory
-                                    ? "bg-neon-red text-white border-neon-red"
-                                    : "border-white/20 text-gray-400 hover:border-white hover:text-white"
+                                    ? "bg-[var(--accent)] text-white border-[var(--accent)]"
+                                    : "border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--accent)]/40 hover:text-[var(--text-primary)]"
                             }`}
                         >
-                            All
+                            {t("blog.filter.all")}
                         </button>
                         {categories.map((cat) => (
                             <button
@@ -159,8 +167,8 @@ export default function BlogPageClient({
                                 onClick={() => setActiveCategory(cat)}
                                 className={`px-4 py-2 text-xs uppercase tracking-widest border rounded-sm transition-all ${
                                     activeCategory === cat
-                                        ? "bg-neon-red text-white border-neon-red"
-                                        : "border-white/20 text-gray-400 hover:border-white hover:text-white"
+                                        ? "bg-[var(--accent)] text-white border-[var(--accent)]"
+                                        : "border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--accent)]/40 hover:text-[var(--text-primary)]"
                                 }`}
                             >
                                 {cat}
@@ -171,10 +179,12 @@ export default function BlogPageClient({
             </motion.div>
 
             {posts.length === 0 ? (
-                <div className="text-center py-24 border border-white/10 rounded-lg bg-gray-900/50">
-                    <p className="text-gray-400 text-lg mb-2">No articles yet</p>
-                    <p className="text-gray-600 text-sm">
-                        Posts will appear here once added via Strapi.
+                <div className="text-center py-24 border border-[var(--border)] rounded-lg bg-[var(--surface)]">
+                    <p className="text-[var(--text-secondary)] text-lg mb-2">
+                        {t("blog.empty.title")}
+                    </p>
+                    <p className="text-[var(--text-muted)] text-sm">
+                        {t("blog.empty.subtitle")}
                     </p>
                 </div>
             ) : (
@@ -182,12 +192,18 @@ export default function BlogPageClient({
                     {/* Featured Section */}
                     {!activeCategory && !searchQuery && featuredPosts.length > 0 && (
                         <section className="mb-16">
-                            <h2 className="text-sm uppercase tracking-widest text-gray-500 mb-6 font-display">
-                                Featured
+                            <h2 className="text-sm uppercase tracking-widest text-[var(--text-muted)] mb-6 font-display">
+                                {featuredLabel}
                             </h2>
                             <div className="grid md:grid-cols-2 gap-6">
                                 {featuredPosts.map((post, i) => (
-                                    <BlogCard key={post.id} post={post} index={i} basePath={basePath} />
+                                    <BlogCard
+                                        key={post.id}
+                                        post={post}
+                                        index={i}
+                                        basePath={basePath}
+                                        featuredLabel={featuredLabel}
+                                    />
                                 ))}
                             </div>
                         </section>
@@ -195,18 +211,24 @@ export default function BlogPageClient({
 
                     {/* All Posts */}
                     <section>
-                        <h2 className="text-sm uppercase tracking-widest text-gray-500 mb-6 font-display">
-                            {activeCategory || "All Posts"}
+                        <h2 className="text-sm uppercase tracking-widest text-[var(--text-muted)] mb-6 font-display">
+                            {activeCategory || t("blog.allPosts")}
                         </h2>
                         {filteredPosts.length > 0 ? (
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredPosts.map((post, i) => (
-                                    <BlogCard key={post.id} post={post} index={i} basePath={basePath} />
+                                    <BlogCard
+                                        key={post.id}
+                                        post={post}
+                                        index={i}
+                                        basePath={basePath}
+                                        featuredLabel={featuredLabel}
+                                    />
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-gray-500 text-center py-12">
-                                No articles found matching your criteria.
+                            <p className="text-[var(--text-muted)] text-center py-12">
+                                {t("blog.empty.search")}
                             </p>
                         )}
                     </section>

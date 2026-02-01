@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogPostClient from "@/app/blog/[slug]/BlogPostClient";
+import BlogPostNotFound from "@/app/blog/BlogPostNotFound";
 import { CMS_ENABLED } from "@/lib/strapi/client";
 import { getBlogPostBySlug, getBlogPostLocaleBySlug } from "@/lib/strapi/blog.server";
 import { getLegacyBlogPostBySlug } from "@/lib/strapi/legacy";
-import Link from "next/link";
 import { DEFAULT_LOCALE, isSupportedLocale, type SupportedLocale } from "@/lib/i18n/locales";
 import { notFound, redirect } from "next/navigation";
 
@@ -73,24 +73,16 @@ export default async function BlogPostPage({ params }: PageProps) {
 
     if (!post) {
         return (
-            <main className="min-h-screen bg-black text-white">
+            <main className="min-h-screen bg-background text-foreground">
                 <Navbar />
-                <div className="container mx-auto px-4 py-32 text-center">
-                    <h1 className="text-4xl font-display font-bold mb-4">Post Not Found</h1>
-                    <p className="text-gray-500 mb-8">
-                        The article you&apos;re looking for doesn&apos;t exist.
-                    </p>
-                    <Link href={`/${locale}/blog`} className="text-neon-red hover:underline">
-                        &lt;- Back to Blog
-                    </Link>
-                </div>
+                <BlogPostNotFound backHref={`/${locale}/blog`} />
                 <Footer />
             </main>
         );
     }
 
     return (
-        <main className="min-h-screen bg-black text-white selection:bg-neon-red selection:text-white">
+        <main className="min-h-screen bg-background text-foreground selection:bg-neon-red selection:text-white">
             <Navbar />
             <BlogPostClient post={post} backHref={`/${locale}/blog`} />
             <Footer />

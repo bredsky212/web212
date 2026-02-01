@@ -130,5 +130,19 @@
     "podcasts.item.9.title": "Podcast GenZ 212 Épisode 9",
     "podcasts.item.9.desc": "Crise de la santé et revendications de réforme",
     "podcasts.item.10.title": "Podcast GenZ 212 Épisode 10",
-    "podcasts.item.10.desc": "L'avenir du mouvement"
+    "podcasts.item.10.desc": "L'avenir du mouvement",
+    "blog.title.primary": "LE",
+    "blog.title.accent": "BLOG",
+    "blog.subtitle": "Actualités, analyses et voix du mouvement GenZ 212.",
+    "blog.searchPlaceholder": "Rechercher des articles...",
+    "blog.filter.all": "Tous",
+    "blog.featured": "À la une",
+    "blog.allPosts": "Tous les articles",
+    "blog.empty.title": "Aucun article pour le moment",
+    "blog.empty.subtitle": "Les articles apparaîtront ici une fois ajoutés via Strapi.",
+    "blog.empty.search": "Aucun article ne correspond à vos critères.",
+    "blog.backToBlog": "Retour au blog",
+    "blog.by": "Par",
+    "blog.postNotFound.title": "Article introuvable",
+    "blog.postNotFound.subtitle": "L'article que vous recherchez n'existe pas."
 }

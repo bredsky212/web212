@@ -130,5 +130,19 @@
     "podcasts.item.9.title": "GenZ 212 Podcast Episode 9",
     "podcasts.item.9.desc": "Healthcare crisis and reform demands",
     "podcasts.item.10.title": "GenZ 212 Podcast Episode 10",
-    "podcasts.item.10.desc": "The future of the movement"
+    "podcasts.item.10.desc": "The future of the movement",
+    "blog.title.primary": "THE",
+    "blog.title.accent": "BLOG",
+    "blog.subtitle": "Updates, analysis, and voices from the GenZ 212 movement.",
+    "blog.searchPlaceholder": "Search articles...",
+    "blog.filter.all": "All",
+    "blog.featured": "Featured",
+    "blog.allPosts": "All Posts",
+    "blog.empty.title": "No articles yet",
+    "blog.empty.subtitle": "Posts will appear here once added via Strapi.",
+    "blog.empty.search": "No articles found matching your criteria.",
+    "blog.backToBlog": "Back to Blog",
+    "blog.by": "By",
+    "blog.postNotFound.title": "Post Not Found",
+    "blog.postNotFound.subtitle": "The article you're looking for doesn't exist."
 }

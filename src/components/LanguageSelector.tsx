@@ -48,7 +48,7 @@ export function LanguageSelector() {
                                     setLang(language.code);
                                     setIsOpen(false);
                                 }}
-                                className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${lang === language.code
+                                className={`w-full text-start px-4 py-2.5 text-sm transition-colors ${lang === language.code
                                         ? "bg-[var(--accent)] text-white"
                                         : "hover:bg-[var(--surface-light)]"
                                     }`}

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { BlocksRenderer, type BlocksContent } from "@strapi/blocks-react-renderer";
 import type { BlogPost } from "@/lib/strapi/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function formatDate(value?: string | null) {
     if (!value) {
@@ -24,6 +25,8 @@ export default function BlogPostClient({
     post: BlogPost;
     backHref?: string;
 }) {
+    const { t, dir } = useLanguage();
+    const backArrow = dir === "rtl" ? "→" : "←";
     const formattedDate = formatDate(post.publishedAt);
     const hasBlocks = Array.isArray(post.content);
 
@@ -36,9 +39,11 @@ export default function BlogPostClient({
             >
                 <Link
                     href={backHref}
-                    className="text-gray-500 hover:text-neon-red transition-colors text-sm inline-flex items-center gap-2 mb-8"
+                    className="text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors text-sm inline-flex items-center gap-2 mb-8"
                 >
-                    &lt;- Back to Blog
+                    {dir === "rtl"
+                        ? `${t("blog.backToBlog")} ${backArrow}`
+                        : `${backArrow} ${t("blog.backToBlog")}`}
                 </Link>
 
                 {post.coverImageUrl && (
@@ -59,26 +64,30 @@ export default function BlogPostClient({
                     </span>
                 )}
 
-                <h1 className="text-4xl md:text-5xl font-display font-bold mb-6">
+                <h1 className="text-4xl md:text-5xl font-display font-bold mb-6 leading-tight">
                     {post.title}
                 </h1>
 
-                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-12 pb-8 border-b border-white/10">
-                    {post.authorName && <span>By {post.authorName}</span>}
+                <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--text-muted)] mb-12 pb-8 border-b border-[var(--border)]">
+                    {post.authorName && (
+                        <span>
+                            {t("blog.by")} {post.authorName}
+                        </span>
+                    )}
                     {post.authorName && formattedDate && <span>•</span>}
                     {formattedDate && <span>{formattedDate}</span>}
                 </div>
 
-                <div className="prose prose-invert prose-lg max-w-none">
+                <div className="prose prose-lg max-w-none prose-headings:font-display prose-headings:text-[var(--text-primary)] prose-p:text-[var(--text-secondary)] prose-p:leading-relaxed prose-p:mb-6 prose-li:text-[var(--text-secondary)] prose-strong:text-[var(--text-primary)] prose-a:text-[var(--accent)] prose-a:no-underline hover:prose-a:underline prose-h1:text-4xl md:prose-h1:text-5xl prose-h2:text-2xl md:prose-h2:text-3xl prose-h3:text-xl md:prose-h3:text-2xl prose-h4:text-lg md:prose-h4:text-xl prose-h1:mt-10 prose-h1:mb-6 prose-h2:mt-8 prose-h2:mb-4 prose-h3:mt-6 prose-h3:mb-3 prose-h4:mt-5 prose-h4:mb-2">
                     {post.excerpt && (
-                        <p className="text-xl text-gray-300 leading-relaxed mb-8">
+                        <p className="text-xl text-[var(--text-secondary)] leading-relaxed mb-8">
                             {post.excerpt}
                         </p>
                     )}
                     {hasBlocks ? (
                         <BlocksRenderer content={post.content as BlocksContent} />
                     ) : (
-                        <div className="text-gray-400 leading-relaxed whitespace-pre-line">
+                        <div className="text-[var(--text-secondary)] leading-relaxed whitespace-pre-line">
                             {post.content as string}
                         </div>
                     )}

@@ -25,7 +25,7 @@ export default function ManifestoPage() {
     const { t } = useLanguage();
 
     return (
-        <main className="min-h-screen bg-black text-white selection:bg-neon-red selection:text-white">
+        <main className="min-h-screen bg-background text-foreground selection:bg-neon-red selection:text-white">
             <Navbar />
 
             <div className="container mx-auto px-4 py-32 max-w-6xl">
@@ -35,10 +35,10 @@ export default function ManifestoPage() {
                     transition={{ duration: 0.8 }}
                     className="text-center mb-16"
                 >
-                    <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500">
+                    <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-[var(--text-primary)]">
                         {t("manifesto.title").split(" ")[0]} <span className="text-neon-red">{t("manifesto.title").split(" ").slice(1).join(" ")}</span>
                     </h1>
-                    <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+                    <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
                         {t("manifesto.subtitle")}
                     </p>
                 </motion.div>
@@ -53,12 +53,12 @@ export default function ManifestoPage() {
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: index * 0.05 }}
                                     onClick={() => setActiveSection(section.id)}
-                                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${activeSection === section.id
-                                        ? "bg-neon-red/20 border border-neon-red/50 text-neon-red"
-                                        : "bg-gray-900/50 border border-white/5 text-gray-400 hover:text-white hover:border-white/20"
+                                    className={`w-full text-start px-4 py-3 rounded-lg transition-all ${activeSection === section.id
+                                        ? "bg-[var(--accent)]/15 border border-[var(--accent)]/50 text-[var(--accent)]"
+                                        : "bg-[var(--surface)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--accent)]/40"
                                         }`}
                                 >
-                                    <span className="text-xs text-gray-600 block">
+                                    <span className="text-xs text-[var(--text-muted)] block">
                                         {String(index + 1).padStart(2, "0")}
                                     </span>
                                     <span className="font-display text-sm">{t(`manifesto.section.${section.id}.title`)}</span>
@@ -77,7 +77,7 @@ export default function ManifestoPage() {
                                     display: activeSection === section.id ? "block" : "none",
                                 }}
                                 transition={{ duration: 0.3 }}
-                                className="bg-gray-900/30 border border-white/10 rounded-lg p-8 lg:p-12"
+                                className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-8 lg:p-12"
                             >
                                 <span className="text-neon-red font-display tracking-widest text-xs mb-2 block uppercase">
                                     {t(`manifesto.section.${section.id}.subtitle`)}
@@ -85,9 +85,9 @@ export default function ManifestoPage() {
                                 <h2 className="text-3xl md:text-4xl font-display font-bold mb-8">
                                     {t(`manifesto.section.${section.id}.title`)}
                                 </h2>
-                                <div className="prose prose-invert prose-lg max-w-none">
+                                <div className="prose prose-lg max-w-none prose-headings:text-[var(--text-primary)] prose-p:text-[var(--text-secondary)]">
                                     {t(`manifesto.section.${section.id}.content`).split("\n\n").map((paragraph, i) => (
-                                        <p key={i} className="text-gray-300 leading-relaxed mb-6">
+                                        <p key={i} className="text-[var(--text-secondary)] leading-relaxed mb-6">
                                             {paragraph}
                                         </p>
                                     ))}
@@ -101,9 +101,9 @@ export default function ManifestoPage() {
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    className="mt-24 text-center border-t border-white/10 pt-16"
+                    className="mt-24 text-center border-t border-[var(--border)] pt-16"
                 >
-                    <blockquote className="text-2xl md:text-3xl font-display italic text-gray-300 mb-6 max-w-3xl mx-auto">
+                    <blockquote className="text-2xl md:text-3xl font-display italic text-[var(--text-secondary)] mb-6 max-w-3xl mx-auto">
                         &ldquo;{t("manifesto.quote")}&rdquo;
                     </blockquote>
                     <p className="text-neon-red font-display tracking-widest text-sm">

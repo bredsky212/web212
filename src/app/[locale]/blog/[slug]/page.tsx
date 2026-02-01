@@ -12,7 +12,7 @@ import { notFound, redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 type PageProps = {
-    params: { locale: string; slug: string };
+    params: { locale: string; slug: string } | Promise<{ locale: string; slug: string }>;
 };
 
 const buildBlogAlternates = (slug: string) => ({
@@ -24,29 +24,35 @@ const buildBlogAlternates = (slug: string) => ({
 });
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const resolvedParams = await Promise.resolve(params);
     const rawLocale =
-        typeof params.locale === "string" ? params.locale.toLowerCase() : "";
+        typeof resolvedParams.locale === "string"
+            ? resolvedParams.locale.toLowerCase()
+            : "";
     const locale = isSupportedLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
 
     return {
         alternates: {
-            canonical: `/${locale}/blog/${params.slug}`,
-            ...buildBlogAlternates(params.slug),
+            canonical: `/${locale}/blog/${resolvedParams.slug}`,
+            ...buildBlogAlternates(resolvedParams.slug),
         },
     };
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
+    const resolvedParams = await Promise.resolve(params);
     if (process.env.STRAPI_DEBUG === "1") {
-        console.info("[route] blog detail raw params", params);
+        console.info("[route] blog detail raw params", resolvedParams);
     }
     const rawLocale =
-        typeof params.locale === "string" ? params.locale.toLowerCase() : "";
+        typeof resolvedParams.locale === "string"
+            ? resolvedParams.locale.toLowerCase()
+            : "";
     if (!isSupportedLocale(rawLocale)) {
         notFound();
     }
     const locale = rawLocale as SupportedLocale;
-    const slug = typeof params.slug === "string" ? params.slug : "";
+    const slug = typeof resolvedParams.slug === "string" ? resolvedParams.slug : "";
     if (!slug) {
         notFound();
     }

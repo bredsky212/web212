@@ -17,7 +17,13 @@ function formatDate(value?: string | null) {
     return date.toLocaleDateString();
 }
 
-export default function BlogPostClient({ post }: { post: BlogPost }) {
+export default function BlogPostClient({
+    post,
+    backHref = "/blog",
+}: {
+    post: BlogPost;
+    backHref?: string;
+}) {
     const formattedDate = formatDate(post.publishedAt);
     const hasBlocks = Array.isArray(post.content);
 
@@ -29,7 +35,7 @@ export default function BlogPostClient({ post }: { post: BlogPost }) {
                 transition={{ duration: 0.8 }}
             >
                 <Link
-                    href="/blog"
+                    href={backHref}
                     className="text-gray-500 hover:text-neon-red transition-colors text-sm inline-flex items-center gap-2 mb-8"
                 >
                     &lt;- Back to Blog

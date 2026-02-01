@@ -9,6 +9,7 @@ import type { BlogPostPreview } from "@/lib/strapi/types";
 interface BlogPageClientProps {
     posts: BlogPostPreview[];
     categories: string[];
+    basePath?: string;
 }
 
 function formatDate(value?: string | null) {
@@ -22,7 +23,15 @@ function formatDate(value?: string | null) {
     return date.toLocaleDateString();
 }
 
-function BlogCard({ post, index }: { post: BlogPostPreview; index: number }) {
+function BlogCard({
+    post,
+    index,
+    basePath,
+}: {
+    post: BlogPostPreview;
+    index: number;
+    basePath: string;
+}) {
     const formattedDate = formatDate(post.publishedAt);
 
     return (
@@ -32,7 +41,7 @@ function BlogCard({ post, index }: { post: BlogPostPreview; index: number }) {
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className="group"
         >
-            <Link href={`/blog/${post.slug}`}>
+            <Link href={`${basePath}/${post.slug}`}>
                 <div className="bg-gradient-to-br from-gray-900/60 to-black border border-white/10 rounded-lg p-6 h-full hover:border-neon-red/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(139,0,0,0.1)]">
                     {post.coverImageUrl && (
                         <div className="mb-4 overflow-hidden rounded relative h-40">
@@ -72,24 +81,33 @@ function BlogCard({ post, index }: { post: BlogPostPreview; index: number }) {
     );
 }
 
-export default function BlogPageClient({ posts, categories }: BlogPageClientProps) {
+export default function BlogPageClient({
+    posts,
+    categories,
+    basePath = "/blog",
+}: BlogPageClientProps) {
     const [activeCategory, setActiveCategory] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
     const filteredPosts = useMemo(() => {
         return posts.filter((post) => {
+            if (!post.slug) {
+                return false;
+            }
             const matchesCategory =
                 !activeCategory || post.category?.name === activeCategory;
+            const title = post.title || "";
+            const excerpt = post.excerpt || "";
             const matchesSearch =
                 !searchQuery ||
-                post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (post.excerpt || "").toLowerCase().includes(searchQuery.toLowerCase());
+                title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                excerpt.toLowerCase().includes(searchQuery.toLowerCase());
             return matchesCategory && matchesSearch;
         });
     }, [posts, activeCategory, searchQuery]);
 
     const featuredPosts = useMemo(
-        () => posts.filter((post) => post.featured),
+        () => posts.filter((post) => post.featured && post.slug),
         [posts]
     );
 
@@ -169,7 +187,7 @@ export default function BlogPageClient({ posts, categories }: BlogPageClientProp
                             </h2>
                             <div className="grid md:grid-cols-2 gap-6">
                                 {featuredPosts.map((post, i) => (
-                                    <BlogCard key={post.id} post={post} index={i} />
+                                    <BlogCard key={post.id} post={post} index={i} basePath={basePath} />
                                 ))}
                             </div>
                         </section>
@@ -183,7 +201,7 @@ export default function BlogPageClient({ posts, categories }: BlogPageClientProp
                         {filteredPosts.length > 0 ? (
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredPosts.map((post, i) => (
-                                    <BlogCard key={post.id} post={post} index={i} />
+                                    <BlogCard key={post.id} post={post} index={i} basePath={basePath} />
                                 ))}
                             </div>
                         ) : (

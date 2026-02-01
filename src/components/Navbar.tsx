@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "./ThemeToggle";
-import { LanguageSelector } from "./LanguageSelector";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Navbar() {
@@ -59,7 +59,7 @@ export default function Navbar() {
 
                     <div className="hidden md:flex items-center gap-3">
                         <ThemeToggle />
-                        <LanguageSelector />
+                        <LanguageSwitcher />
                     </div>
 
                     <div className="md:hidden flex items-center gap-2">
@@ -101,7 +101,7 @@ export default function Navbar() {
                                 </Link>
                             ))}
                             <div className="pt-4 border-t border-[var(--border)]">
-                                <LanguageSelector />
+                                <LanguageSwitcher />
                             </div>
                         </div>
                     </motion.div>

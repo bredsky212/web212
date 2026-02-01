@@ -23,6 +23,8 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - Set:
   - `CMS_ENABLED=true`
   - `STRAPI_URL=http://localhost:1337`
+  - `STRAPI_PUBLIC_URL=` (prod: set to public Strapi host for images)
+  - `STRAPI_DEBUG=1` (optional; logs Strapi request URLs)
   - `STRAPI_API_TOKEN=...` (read-only token)
 
 2) CMS env
@@ -47,6 +49,7 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - Next.js lint: `npm run lint`
 - Strapi dev: `cd cms && npm run develop`
 - Docker: `docker compose up -d`
+- Strapi locale smoke test: `node scripts/strapi-locale-smoke.mjs`
 
 ## Strapi Integration Rules
 
@@ -54,6 +57,23 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - **Client components must never import server-only modules**. Use `src/lib/strapi/types.ts` for shared types.
 - `STRAPI_API_TOKEN` is required in **production** and never exposed via `NEXT_PUBLIC_*`.
 - Blog list uses preview fields (no blocks). Blog detail loads full blocks.
+- Blog responses include `locale` for i18n routing; localizations are not populated (Strapi v5 validation rejects `populate=localizations`).
+
+
+## Blog i18n Routing
+
+- Supported locales: `ar`, `fr`, `en` (default `ar`).
+- Cookie: `site_locale` (set in `middleware.ts`).
+- Non-prefixed routes (`/blog`) read the cookie; prefixed routes (`/ar/blog`, `/fr/blog`, `/en/blog`) override it and also persist the cookie.
+- Locale helpers: `src/lib/i18n/locales.ts` and `src/lib/i18n/locale.ts`.
+- Prefixed pages live in `src/app/[locale]/blog/*`.
+- Middleware rewrites prefixed **blog list** routes to `/blog?locale=xx` to avoid same-request cookie lag; prefixed blog detail routes are not rewritten.
+
+### Lessons learned
+
+- Always verify Strapi requests with `STRAPI_DEBUG=1` when locale issues appear.
+- If a blog **slug** is missing, Strapi filters drop and the API can return the first post in that locale.
+- Prefer prefixed URLs (`/ar|fr|en`) for shareable, deterministic blog routes.
 
 ## Caching / Revalidate
 
@@ -93,6 +113,17 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - Blog detail: `src/app/blog/[slug]/page.tsx`
 - Strapi CORS: `cms/config/middlewares.ts`
 - Strapi schemas: `cms/src/api/blog-post/.../schema.json` and `cms/src/api/blog-category/.../schema.json`
+- Language switcher: `src/components/LanguageSwitcher.tsx` (wired in `src/components/Navbar.tsx`)
+- Locale middleware: `middleware.ts`
+
+
+## Strapi as Code (i18n)
+
+Note: Strapi v5 ships i18n in core; there is no separate @strapi/plugin-i18n npm package.
+
+- Localization is stored in schema files under `cms/src/api/**/schema.json`.
+- If localization is toggled in admin, you must commit the updated schemas or it will be lost on rebuild.
+- Check with `scripts/check-strapi-i18n.sh`.
 
 ## Safety Notes
 

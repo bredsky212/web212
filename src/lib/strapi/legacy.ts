@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { headers } from 'next/headers';
+import { DEFAULT_LOCALE } from '@/lib/i18n/locales';
 import type { BlogPost, BlogPostPreview } from './types';
 
 const slugify = (value: string) =>
@@ -45,6 +46,7 @@ const mapLegacyPost = (post: LegacyPost): BlogPost => {
 
   return {
     id: String(post._id || post.id || post.slug || ''),
+    locale: DEFAULT_LOCALE,
     slug: post.slug || '',
     title: post.title || '',
     excerpt: post.excerpt,
@@ -55,6 +57,7 @@ const mapLegacyPost = (post: LegacyPost): BlogPost => {
     featured: Boolean(post.featured),
     coverImageUrl: post.imageUrl || null,
     readingTime: typeof post.readingTime === 'number' ? post.readingTime : null,
+    localizations: [],
   };
 };
 
@@ -63,6 +66,7 @@ const mapLegacyPreview = (post: LegacyPost): BlogPostPreview => {
   return {
     id: full.id,
     documentId: full.documentId,
+    locale: full.locale,
     slug: full.slug,
     title: full.title,
     excerpt: full.excerpt,
@@ -72,6 +76,7 @@ const mapLegacyPreview = (post: LegacyPost): BlogPostPreview => {
     featured: full.featured,
     coverImageUrl: full.coverImageUrl,
     readingTime: full.readingTime,
+    localizations: full.localizations,
   };
 };
 

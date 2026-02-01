@@ -1,7 +1,8 @@
 import 'server-only';
 
+import { DEFAULT_LOCALE, isSupportedLocale } from '@/lib/i18n/locales';
 import { getStrapiMediaUrl, strapiFetch, type StrapiQuery } from './client';
-import type { BlogPost, BlogPostPreview } from './types';
+import type { BlogLocalization, BlogPost, BlogPostPreview } from './types';
 
 type StrapiCollectionResponse<T> = {
   data: T[];
@@ -31,6 +32,7 @@ type StrapiBlogPost = StrapiEntity & {
   featured?: boolean;
   readingTime?: number;
   locale?: string;
+  localizations?: unknown;
   category?: unknown;
   coverImage?: unknown;
 };
@@ -67,11 +69,41 @@ const normalizeRelation = (value: unknown) => {
   return normalizeEntity(value as StrapiEntity);
 };
 
-const mapBlogPostBase = (raw: StrapiEntity | null) => {
+const mapBlogPostBase = (raw: StrapiEntity | null, requestedLocale?: string) => {
   const normalized = normalizeEntity(raw) as StrapiBlogPost | null;
   if (!normalized) {
     return null;
   }
+
+  const resolvedLocale =
+    typeof normalized.locale === 'string' ? normalized.locale : requestedLocale;
+  const locale = isSupportedLocale(resolvedLocale) ? resolvedLocale : DEFAULT_LOCALE;
+
+  const localizationsRaw = normalizeRelation(normalized.localizations);
+  const localizationList = Array.isArray(localizationsRaw)
+    ? localizationsRaw
+    : localizationsRaw
+    ? [localizationsRaw]
+    : [];
+  const localizations = localizationList
+    .map((entry) => {
+      const candidate = entry as StrapiEntity & { locale?: string; slug?: string };
+      const entryLocale = typeof candidate.locale === 'string' ? candidate.locale : null;
+      const entrySlug = typeof candidate.slug === 'string' ? candidate.slug : null;
+      if (!entryLocale || !entrySlug || !isSupportedLocale(entryLocale)) {
+        return null;
+      }
+      return {
+        locale: entryLocale,
+        slug: entrySlug,
+        documentId: candidate.documentId
+          ? String(candidate.documentId)
+          : candidate.id
+          ? String(candidate.id)
+          : undefined,
+      } satisfies BlogLocalization;
+    })
+    .filter((entry): entry is BlogLocalization => Boolean(entry));
 
   const category = normalizeRelation(normalized.category) as
     | (StrapiEntity & { name?: string; slug?: string })
@@ -97,7 +129,8 @@ const mapBlogPostBase = (raw: StrapiEntity | null) => {
 
   const base: BlogPostPreview = {
     id: String(normalized.id ?? normalized.documentId ?? slug ?? ''),
-    documentId: normalized.documentId,
+    documentId: normalized.documentId ? String(normalized.documentId) : undefined,
+    locale,
     slug,
     title,
     excerpt,
@@ -114,18 +147,22 @@ const mapBlogPostBase = (raw: StrapiEntity | null) => {
     featured: Boolean(normalized.featured),
     coverImageUrl: getStrapiMediaUrl(coverImageUrl),
     readingTime,
+    localizations: localizations.length ? localizations : undefined,
   };
 
   return { normalized, base };
 };
 
-const mapBlogPostPreview = (raw: StrapiEntity | null): BlogPostPreview | null => {
-  const result = mapBlogPostBase(raw);
+const mapBlogPostPreview = (
+  raw: StrapiEntity | null,
+  requestedLocale?: string
+): BlogPostPreview | null => {
+  const result = mapBlogPostBase(raw, requestedLocale);
   return result ? result.base : null;
 };
 
-const mapBlogPost = (raw: StrapiEntity | null): BlogPost | null => {
-  const result = mapBlogPostBase(raw);
+const mapBlogPost = (raw: StrapiEntity | null, requestedLocale?: string): BlogPost | null => {
+  const result = mapBlogPostBase(raw, requestedLocale);
   if (!result) {
     return null;
   }
@@ -140,6 +177,7 @@ export const getBlogPostPreviews = async (locale?: string) => {
   const query: StrapiQuery = {
     sort: ['publishedAt:desc'],
     fields: [
+      'documentId',
       'slug',
       'title',
       'excerpt',
@@ -147,8 +185,15 @@ export const getBlogPostPreviews = async (locale?: string) => {
       'publishedAt',
       'authorName',
       'readingTime',
+      'locale',
     ],
-    populate: ['category', 'coverImage'],
+    populate: {
+      category: true,
+      coverImage: true,
+      localizations: {
+        fields: ['slug', 'locale', 'documentId'],
+      },
+    },
   };
 
   const response = await strapiFetch<StrapiCollectionResponse<StrapiEntity>>('blog-posts', {
@@ -162,16 +207,23 @@ export const getBlogPostPreviews = async (locale?: string) => {
   }
 
   return response.data
-    .map((entry) => mapBlogPostPreview(entry))
+    .map((entry) => mapBlogPostPreview(entry, locale))
     .filter((entry): entry is BlogPostPreview => Boolean(entry));
 };
 
 export const getBlogPostBySlug = async (slug: string, locale?: string) => {
   const query: StrapiQuery = {
     filters: { slug: { $eq: slug } },
-    populate: ['category', 'coverImage'],
+    populate: {
+      category: true,
+      coverImage: true,
+      localizations: {
+        fields: ['slug', 'locale', 'documentId'],
+      },
+    },
     pagination: { pageSize: 1 },
     fields: [
+      'documentId',
       'slug',
       'title',
       'excerpt',
@@ -180,6 +232,7 @@ export const getBlogPostBySlug = async (slug: string, locale?: string) => {
       'publishedAt',
       'authorName',
       'readingTime',
+      'locale',
     ],
   };
 
@@ -194,14 +247,14 @@ export const getBlogPostBySlug = async (slug: string, locale?: string) => {
   }
 
   const first = response.data[0];
-  return mapBlogPost(first);
+  return mapBlogPost(first, locale);
 };
 
 export const getBlogPostLocaleBySlug = async (slug: string) => {
   const query: StrapiQuery = {
     filters: { slug: { $eq: slug } },
     pagination: { pageSize: 1 },
-    fields: ['slug', 'locale'],
+    fields: ['slug', 'locale', 'documentId'],
   };
 
   const response = await strapiFetch<StrapiCollectionResponse<StrapiEntity>>('blog-posts', {
@@ -222,7 +275,7 @@ export const getBlogPostLocaleBySlug = async (slug: string) => {
   const resolvedLocale = typeof first.locale === 'string' ? first.locale : null;
   const resolvedSlug = typeof first.slug === 'string' ? first.slug : null;
 
-  if (!resolvedLocale || !resolvedSlug) {
+  if (!resolvedLocale || !resolvedSlug || !isSupportedLocale(resolvedLocale)) {
     return null;
   }
 

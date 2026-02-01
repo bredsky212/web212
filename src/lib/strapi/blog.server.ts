@@ -189,7 +189,6 @@ export const getBlogPostPreviews = async (locale?: string) => {
     populate: {
       category: true,
       coverImage: true,
-      localizations: true,
     },
   };
 
@@ -214,9 +213,6 @@ export const getBlogPostBySlug = async (slug: string, locale?: string) => {
     populate: {
       category: true,
       coverImage: true,
-      localizations: {
-        fields: ['slug', 'locale', 'documentId'],
-      },
     },
     pagination: { pageSize: 1 },
     fields: [

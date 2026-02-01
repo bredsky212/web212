@@ -185,6 +185,7 @@ export const getBlogPostPreviews = async (locale?: string) => {
       'publishedAt',
       'authorName',
       'readingTime',
+      'locale',
     ],
     populate: {
       category: true,
@@ -204,7 +205,8 @@ export const getBlogPostPreviews = async (locale?: string) => {
 
   return response.data
     .map((entry) => mapBlogPostPreview(entry, locale))
-    .filter((entry): entry is BlogPostPreview => Boolean(entry));
+    .filter((entry): entry is BlogPostPreview => Boolean(entry))
+    .filter((entry) => (!locale ? true : entry.locale === locale));
 };
 
 export const getBlogPostBySlug = async (slug: string, locale?: string) => {
@@ -225,6 +227,7 @@ export const getBlogPostBySlug = async (slug: string, locale?: string) => {
       'publishedAt',
       'authorName',
       'readingTime',
+      'locale',
     ],
   };
 
@@ -239,7 +242,11 @@ export const getBlogPostBySlug = async (slug: string, locale?: string) => {
   }
 
   const first = response.data[0];
-  return mapBlogPost(first, locale);
+  const post = mapBlogPost(first, locale);
+  if (post && locale && post.locale !== locale) {
+    return null;
+  }
+  return post;
 };
 
 export const getBlogPostLocaleBySlug = async (slug: string) => {

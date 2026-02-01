@@ -47,6 +47,16 @@ export default async function BlogPage({ params }: PageProps) {
         ? await getBlogPostPreviews(locale)
         : await getLegacyBlogPostPreviews();
     const safePosts = posts ?? [];
+    if (
+        process.env.STRAPI_DEBUG === "1" &&
+        safePosts.length > 0 &&
+        safePosts.some((post) => post.locale !== locale)
+    ) {
+        console.warn(
+            `[i18n] Blog locale mismatch for /${locale}/blog`,
+            safePosts.map((post) => post.locale).slice(0, 5)
+        );
+    }
     const categories = Array.from(
         new Set(safePosts.map((post) => post.category?.name).filter(Boolean))
     ) as string[];

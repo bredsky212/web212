@@ -17,6 +17,7 @@ export type StrapiFetchOptions = {
 const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337';
 const STRAPI_PUBLIC_URL = process.env.STRAPI_PUBLIC_URL || STRAPI_URL;
 const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN;
+const STRAPI_DEBUG = process.env.STRAPI_DEBUG === '1';
 
 export const CMS_ENABLED = process.env.CMS_ENABLED === 'true';
 
@@ -110,7 +111,14 @@ export async function strapiFetch<T>(path: string, options: StrapiFetchOptions =
   }
 
   try {
+    if (STRAPI_DEBUG) {
+      console.info(`[STRAPI] GET ${url} locale=${locale ?? 'default'} auth=${auth ? 'token' : 'public'}`);
+    }
     const response = await fetch(url, fetchOptions);
+
+    if (STRAPI_DEBUG) {
+      console.info(`[STRAPI] ${response.status} ${url}`);
+    }
 
     if (response.status === 404) {
       return null;
@@ -126,6 +134,9 @@ export async function strapiFetch<T>(path: string, options: StrapiFetchOptions =
 
     return (await response.json()) as T;
   } catch (error) {
+    if (STRAPI_DEBUG) {
+      console.warn('[STRAPI] request failed', error);
+    }
     if (isBuildPhase()) {
       return null;
     }

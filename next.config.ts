@@ -1,8 +1,13 @@
 import type { NextConfig } from "next";
 
 const strapiPublicUrl = process.env.STRAPI_PUBLIC_URL || process.env.STRAPI_URL;
-type RemotePattern = NonNullable<NextConfig["images"]>["remotePatterns"][number];
-const remotePatterns: NonNullable<NextConfig["images"]>["remotePatterns"] = [
+type RemotePattern = {
+  protocol: "http" | "https";
+  hostname: string;
+  port?: string;
+  pathname: string;
+};
+const remotePatterns: RemotePattern[] = [
   {
     protocol: "http",
     hostname: "localhost",

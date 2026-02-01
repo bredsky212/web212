@@ -35,13 +35,31 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
+    const slug = typeof params.slug === "string" ? params.slug : "";
+    if (!slug) {
+        return (
+            <main className="min-h-screen bg-black text-white">
+                <Navbar />
+                <div className="container mx-auto px-4 py-32 text-center">
+                    <h1 className="text-4xl font-display font-bold mb-4">Post Not Found</h1>
+                    <p className="text-gray-500 mb-8">
+                        The article you&apos;re looking for doesn&apos;t exist.
+                    </p>
+                    <Link href="/blog" className="text-neon-red hover:underline">
+                        &lt;- Back to Blog
+                    </Link>
+                </div>
+                <Footer />
+            </main>
+        );
+    }
     const locale = await getCookieLocale();
     const post = CMS_ENABLED
-        ? await getBlogPostBySlug(params.slug, locale)
-        : await getLegacyBlogPostBySlug(params.slug);
+        ? await getBlogPostBySlug(slug, locale)
+        : await getLegacyBlogPostBySlug(slug);
 
     if (!post && CMS_ENABLED) {
-        const redirectInfo = await getBlogPostLocaleBySlug(params.slug);
+        const redirectInfo = await getBlogPostLocaleBySlug(slug);
         if (redirectInfo) {
             redirect(`/${redirectInfo.locale}/blog/${redirectInfo.slug}`);
         }

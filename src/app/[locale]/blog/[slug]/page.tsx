@@ -39,17 +39,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function BlogPostPage({ params }: PageProps) {
     const rawLocale =
         typeof params.locale === "string" ? params.locale.toLowerCase() : "";
-    if (rawLocale && !isSupportedLocale(rawLocale)) {
+    if (!isSupportedLocale(rawLocale)) {
         notFound();
     }
-    const locale = (isSupportedLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE) as SupportedLocale;
+    const locale = rawLocale as SupportedLocale;
+    const slug = typeof params.slug === "string" ? params.slug : "";
+    if (!slug) {
+        notFound();
+    }
+    if (process.env.STRAPI_DEBUG === "1") {
+        console.info(`[i18n] /${locale}/blog/${slug}`);
+    }
 
     const post = CMS_ENABLED
-        ? await getBlogPostBySlug(params.slug, locale)
-        : await getLegacyBlogPostBySlug(params.slug);
+        ? await getBlogPostBySlug(slug, locale)
+        : await getLegacyBlogPostBySlug(slug);
 
     if (!post && CMS_ENABLED) {
-        const redirectInfo = await getBlogPostLocaleBySlug(params.slug);
+        const redirectInfo = await getBlogPostLocaleBySlug(slug);
         if (redirectInfo) {
             redirect(`/${redirectInfo.locale}/blog/${redirectInfo.slug}`);
         }

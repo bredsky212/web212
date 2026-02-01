@@ -91,6 +91,9 @@ export default function BlogPageClient({
 
     const filteredPosts = useMemo(() => {
         return posts.filter((post) => {
+            if (!post.slug) {
+                return false;
+            }
             const matchesCategory =
                 !activeCategory || post.category?.name === activeCategory;
             const title = post.title || "";
@@ -104,7 +107,7 @@ export default function BlogPageClient({
     }, [posts, activeCategory, searchQuery]);
 
     const featuredPosts = useMemo(
-        () => posts.filter((post) => post.featured),
+        () => posts.filter((post) => post.featured && post.slug),
         [posts]
     );
 

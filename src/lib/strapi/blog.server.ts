@@ -210,6 +210,13 @@ export const getBlogPostPreviews = async (locale?: string) => {
 };
 
 export const getBlogPostBySlug = async (slug: string, locale?: string) => {
+  if (!slug) {
+    if (process.env.STRAPI_DEBUG === '1') {
+      console.warn('[STRAPI] getBlogPostBySlug called without a slug');
+    }
+    return null;
+  }
+
   const query: StrapiQuery = {
     filters: { slug: { $eq: slug } },
     populate: {
@@ -250,6 +257,13 @@ export const getBlogPostBySlug = async (slug: string, locale?: string) => {
 };
 
 export const getBlogPostLocaleBySlug = async (slug: string) => {
+  if (!slug) {
+    if (process.env.STRAPI_DEBUG === '1') {
+      console.warn('[STRAPI] getBlogPostLocaleBySlug called without a slug');
+    }
+    return null;
+  }
+
   const query: StrapiQuery = {
     filters: { slug: { $eq: slug } },
     pagination: { pageSize: 1 },
@@ -262,8 +276,24 @@ export const getBlogPostLocaleBySlug = async (slug: string) => {
     cache: 'no-store',
   });
 
-  if (!response) {
-    return null;
+  if (!response || response.data.length === 0) {
+    const fallback = await strapiFetch<StrapiCollectionResponse<StrapiEntity>>('blog-posts', {
+      query,
+      locale: DEFAULT_LOCALE,
+      cache: 'no-store',
+    });
+    if (!fallback || fallback.data.length === 0) {
+      return null;
+    }
+    const fallbackEntry = normalizeEntity(fallback.data[0]) as StrapiBlogPost | null;
+    if (!fallbackEntry) {
+      return null;
+    }
+    const fallbackSlug = typeof fallbackEntry.slug === 'string' ? fallbackEntry.slug : null;
+    if (!fallbackSlug) {
+      return null;
+    }
+    return { locale: DEFAULT_LOCALE, slug: fallbackSlug };
   }
 
   const first = normalizeEntity(response.data[0]) as StrapiBlogPost | null;

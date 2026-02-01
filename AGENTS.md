@@ -23,6 +23,7 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - Set:
   - `CMS_ENABLED=true`
   - `STRAPI_URL=http://localhost:1337`
+  - `STRAPI_PUBLIC_URL=` (prod: set to public Strapi host for images)
   - `STRAPI_API_TOKEN=...` (read-only token)
 
 2) CMS env
@@ -54,6 +55,15 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - **Client components must never import server-only modules**. Use `src/lib/strapi/types.ts` for shared types.
 - `STRAPI_API_TOKEN` is required in **production** and never exposed via `NEXT_PUBLIC_*`.
 - Blog list uses preview fields (no blocks). Blog detail loads full blocks.
+
+
+## Blog i18n Routing
+
+- Supported locales: `ar`, `fr`, `en` (default `ar`).
+- Cookie: `site_locale` (set in `middleware.ts`).
+- Non-prefixed routes (`/blog`) read the cookie; prefixed routes (`/ar/blog`, `/fr/blog`, `/en/blog`) override it and also persist the cookie.
+- Locale helpers: `src/lib/i18n/locales.ts` and `src/lib/i18n/locale.ts`.
+- Prefixed pages live in `src/app/[locale]/blog/*`.
 
 ## Caching / Revalidate
 
@@ -93,6 +103,8 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - Blog detail: `src/app/blog/[slug]/page.tsx`
 - Strapi CORS: `cms/config/middlewares.ts`
 - Strapi schemas: `cms/src/api/blog-post/.../schema.json` and `cms/src/api/blog-category/.../schema.json`
+- Language switcher: `src/components/LanguageSwitcher.tsx` (wired in `src/components/Navbar.tsx`)
+- Locale middleware: `middleware.ts`
 
 ## Safety Notes
 

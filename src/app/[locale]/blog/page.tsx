@@ -5,7 +5,7 @@ import BlogPageClient from "@/app/blog/BlogPageClient";
 import { CMS_ENABLED } from "@/lib/strapi/client";
 import { getBlogPostPreviews } from "@/lib/strapi/blog.server";
 import { getLegacyBlogPostPreviews } from "@/lib/strapi/legacy";
-import { normalizeLocale } from "@/lib/i18n/locales";
+import { DEFAULT_LOCALE, isSupportedLocale, type SupportedLocale } from "@/lib/i18n/locales";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -23,7 +23,8 @@ const buildBlogAlternates = () => ({
 });
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const locale = normalizeLocale(params.locale);
+    const rawLocale = params.locale.toLowerCase();
+    const locale = isSupportedLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
 
     return {
         alternates: {
@@ -34,10 +35,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogPage({ params }: PageProps) {
-    const locale = normalizeLocale(params.locale);
-    if (locale !== params.locale) {
+    const rawLocale = params.locale.toLowerCase();
+    if (!isSupportedLocale(rawLocale)) {
         notFound();
     }
+    const locale = rawLocale as SupportedLocale;
 
     const posts = CMS_ENABLED
         ? await getBlogPostPreviews(locale)

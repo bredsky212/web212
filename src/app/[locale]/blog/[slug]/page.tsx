@@ -37,6 +37,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
+    if (process.env.STRAPI_DEBUG === "1") {
+        console.info("[route] blog detail raw params", params);
+    }
     const rawLocale =
         typeof params.locale === "string" ? params.locale.toLowerCase() : "";
     if (!isSupportedLocale(rawLocale)) {

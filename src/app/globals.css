@@ -21,6 +21,8 @@
   --text-secondary: #a0a0a0;
   --text-muted: #666666;
   --accent: #8b0000;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 }
 
 [data-theme="light"] {

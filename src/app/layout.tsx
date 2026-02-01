@@ -20,13 +20,15 @@ export const metadata: Metadata = {
   description: "A digital archive of the Gen-Z era, evolved.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const headerLocale = headers().get("x-site-locale");
-  const cookieLocale = cookies().get(LOCALE_COOKIE_NAME)?.value;
+  const headerList = await headers();
+  const cookieList = await cookies();
+  const headerLocale = headerList.get("x-site-locale");
+  const cookieLocale = cookieList.get(LOCALE_COOKIE_NAME)?.value;
   const resolvedLocale = isSupportedLocale(headerLocale)
     ? headerLocale
     : isSupportedLocale(cookieLocale)

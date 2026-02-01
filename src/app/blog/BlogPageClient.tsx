@@ -93,10 +93,12 @@ export default function BlogPageClient({
         return posts.filter((post) => {
             const matchesCategory =
                 !activeCategory || post.category?.name === activeCategory;
+            const title = post.title || "";
+            const excerpt = post.excerpt || "";
             const matchesSearch =
                 !searchQuery ||
-                post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (post.excerpt || "").toLowerCase().includes(searchQuery.toLowerCase());
+                title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                excerpt.toLowerCase().includes(searchQuery.toLowerCase());
             return matchesCategory && matchesSearch;
         });
     }, [posts, activeCategory, searchQuery]);

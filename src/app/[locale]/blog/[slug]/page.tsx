@@ -48,7 +48,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         notFound();
     }
     if (process.env.STRAPI_DEBUG === "1") {
-        console.info(`[i18n] /${locale}/blog/${slug}`);
+        console.info("[route] blog detail params", { locale, slug });
     }
 
     const post = CMS_ENABLED

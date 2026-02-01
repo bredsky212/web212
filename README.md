@@ -57,7 +57,7 @@ Next.js site with a Strapi CMS backend (v5) for editorial content.
 - Non-prefixed routes (`/blog`) read the cookie.
 - Prefixed routes (`/ar/blog`, `/fr/blog`, `/en/blog`) **force** locale and update the cookie.
 - The header language switcher navigates to prefixed routes.
-- Middleware rewrites prefixed blog routes to `/blog` with `?locale=xx` so the server can render the right locale on the same request.
+- Middleware only rewrites the **blog list** (`/ar|fr|en/blog`) to `/blog?locale=xx` to avoid cookie lag; blog detail routes stay prefixed.
 
 ### Blog locale troubleshooting
 

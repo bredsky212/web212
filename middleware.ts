@@ -7,18 +7,21 @@ export function middleware(req: NextRequest) {
   const segment = pathname.split('/')[1];
 
   if (segment && isSupportedLocale(segment)) {
+    if (pathname.startsWith(`/${segment}/blog/`)) {
+      const res = NextResponse.next();
+      res.cookies.set(LOCALE_COOKIE_NAME, segment, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: 'lax',
+      });
+      return res;
+    }
+
     if (pathname.startsWith(`/${segment}/blog`)) {
       const url = req.nextUrl.clone();
       const stripped = pathname.replace(`/${segment}`, '') || '/';
       url.pathname = stripped;
       url.searchParams.set('locale', segment);
-      const parts = pathname.split('/');
-      if (parts.length > 3) {
-        const slug = parts.slice(3).join('/');
-        if (slug) {
-          url.searchParams.set('slug', slug);
-        }
-      }
       const res = NextResponse.rewrite(url);
       res.cookies.set(LOCALE_COOKIE_NAME, segment, {
         path: '/',

@@ -101,7 +101,7 @@ const mapBlogPostBase = (raw: StrapiEntity | null, requestedLocale?: string) => 
           : candidate.id
           ? String(candidate.id)
           : undefined,
-      } satisfies BlogLocalization;
+      } as BlogLocalization;
     })
     .filter((entry): entry is BlogLocalization => Boolean(entry));
 

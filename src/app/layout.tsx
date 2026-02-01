@@ -1,18 +1,23 @@
 import type { Metadata } from "next";
 import { cookies, headers } from "next/headers";
-import { Inter, Orbitron } from "next/font/google";
+import { Inter, Orbitron, Noto_Sans_Arabic } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, isSupportedLocale } from "@/lib/i18n/locales";
 
 const inter = Inter({
   variable: "--font-inter",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
+});
+
+const notoArabic = Noto_Sans_Arabic({
+  variable: "--font-arabic",
+  subsets: ["arabic"],
 });
 
 export const metadata: Metadata = {
@@ -48,7 +53,7 @@ export default async function RootLayout({
       </head>
       <body
         dir={dir}
-        className={`${inter.variable} ${orbitron.variable} antialiased bg-background text-foreground`}
+        className={`${inter.variable} ${orbitron.variable} ${notoArabic.variable} antialiased bg-background text-foreground`}
       >
         <Providers>{children}</Providers>
       </body>

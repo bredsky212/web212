@@ -46,6 +46,11 @@ body {
   transition: background-color 0.3s, color 0.3s;
 }
 
+:root[dir="rtl"] {
+  --font-sans: var(--font-arabic), ui-sans-serif, system-ui;
+  --font-display: var(--font-arabic), ui-sans-serif, system-ui;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }

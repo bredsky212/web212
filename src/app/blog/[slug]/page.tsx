@@ -60,11 +60,11 @@ export default async function BlogPostPage({ params, searchParams }: PageProps) 
     const slug = resolveSlug(params, searchParams);
     if (!slug) {
         return (
-            <main className="min-h-screen bg-black text-white">
+            <main className="min-h-screen bg-background text-foreground">
                 <Navbar />
                 <div className="container mx-auto px-4 py-32 text-center">
                     <h1 className="text-4xl font-display font-bold mb-4">Post Not Found</h1>
-                    <p className="text-gray-500 mb-8">
+                    <p className="text-[var(--text-secondary)] mb-8">
                         The article you&apos;re looking for doesn&apos;t exist.
                     </p>
                     <Link href="/blog" className="text-neon-red hover:underline">
@@ -89,11 +89,11 @@ export default async function BlogPostPage({ params, searchParams }: PageProps) 
 
     if (!post) {
         return (
-            <main className="min-h-screen bg-black text-white">
+            <main className="min-h-screen bg-background text-foreground">
                 <Navbar />
                 <div className="container mx-auto px-4 py-32 text-center">
                     <h1 className="text-4xl font-display font-bold mb-4">Post Not Found</h1>
-                    <p className="text-gray-500 mb-8">
+                    <p className="text-[var(--text-secondary)] mb-8">
                         The article you&apos;re looking for doesn&apos;t exist.
                     </p>
                     <Link href="/blog" className="text-neon-red hover:underline">
@@ -106,7 +106,7 @@ export default async function BlogPostPage({ params, searchParams }: PageProps) 
     }
 
     return (
-        <main className="min-h-screen bg-black text-white selection:bg-neon-red selection:text-white">
+        <main className="min-h-screen bg-background text-foreground selection:bg-neon-red selection:text-white">
             <Navbar />
             <BlogPostClient post={post} backHref={`/${locale}/blog`} />
             <Footer />

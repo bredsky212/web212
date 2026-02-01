@@ -68,7 +68,7 @@ export default async function BlogPage({ params }: PageProps) {
     ) as string[];
 
     return (
-        <main className="min-h-screen bg-black text-white selection:bg-neon-red selection:text-white">
+        <main className="min-h-screen bg-background text-foreground selection:bg-neon-red selection:text-white">
             <Navbar />
 
             <div className="container mx-auto px-4 py-32 max-w-6xl">

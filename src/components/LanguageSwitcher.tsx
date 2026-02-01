@@ -43,6 +43,19 @@ const isBlogPath = (pathname: string) => {
   return withoutLocale === '/blog' || withoutLocale.startsWith('/blog/');
 };
 
+const getBlogSlug = (pathname: string) => {
+  const normalized = pathname.startsWith('/') ? pathname : `/${pathname}`;
+  const parts = normalized.split('/');
+  const withoutLocale = isSupportedLocale(parts[1])
+    ? `/${parts.slice(2).join('/')}`
+    : normalized;
+  if (!withoutLocale.startsWith('/blog/')) {
+    return null;
+  }
+  const slug = withoutLocale.split('/')[2];
+  return slug || null;
+};
+
 const buildPrefixedPath = (pathname: string, locale: SupportedLocale) => {
   const normalized = pathname.startsWith('/') ? pathname : `/${pathname}`;
   const parts = normalized.split('/');
@@ -67,11 +80,35 @@ export function LanguageSwitcher() {
     setLang(nextLocale);
   }, [pathname, setLang]);
 
-  const handleSelect = (locale: SupportedLocale) => {
+  const handleSelect = async (locale: SupportedLocale) => {
     setActiveLocale(locale);
     setLang(locale);
 
     if (isBlogPath(pathname)) {
+      const slug = getBlogSlug(pathname);
+      if (slug) {
+        const fromLocale =
+          getLocaleFromPath(pathname) || getLocaleFromCookie() || DEFAULT_LOCALE;
+        try {
+          const response = await fetch(
+            `/api/blog/resolve-slug?slug=${encodeURIComponent(slug)}&from=${fromLocale}&to=${locale}`
+          );
+          if (response.ok) {
+            const data = (await response.json()) as { slug?: string | null };
+            if (data.slug) {
+              router.push(`/${locale}/blog/${data.slug}`);
+              router.refresh();
+              return;
+            }
+          }
+        } catch {
+          // ignore and fall back to listing
+        }
+        router.push(`/${locale}/blog`);
+        router.refresh();
+        return;
+      }
+
       const target = buildPrefixedPath(pathname, locale);
       if (target !== pathname) {
         router.push(target);

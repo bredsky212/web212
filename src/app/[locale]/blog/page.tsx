@@ -11,7 +11,7 @@ import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 type PageProps = {
-    params: { locale: string };
+    params: { locale: string } | Promise<{ locale: string }>;
 };
 
 const buildBlogAlternates = () => ({
@@ -23,8 +23,11 @@ const buildBlogAlternates = () => ({
 });
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const resolvedParams = await Promise.resolve(params);
     const rawLocale =
-        typeof params.locale === "string" ? params.locale.toLowerCase() : "";
+        typeof resolvedParams.locale === "string"
+            ? resolvedParams.locale.toLowerCase()
+            : "";
     const locale = isSupportedLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
 
     return {
@@ -36,8 +39,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogPage({ params }: PageProps) {
+    const resolvedParams = await Promise.resolve(params);
     const rawLocale =
-        typeof params.locale === "string" ? params.locale.toLowerCase() : "";
+        typeof resolvedParams.locale === "string"
+            ? resolvedParams.locale.toLowerCase()
+            : "";
     if (!isSupportedLocale(rawLocale)) {
         notFound();
     }

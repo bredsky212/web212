@@ -24,6 +24,7 @@ This guide helps coding agents work effectively in this repo with minimal fricti
   - `CMS_ENABLED=true`
   - `STRAPI_URL=http://localhost:1337`
   - `STRAPI_PUBLIC_URL=` (prod: set to public Strapi host for images)
+  - `STRAPI_DEBUG=1` (optional; logs Strapi request URLs)
   - `STRAPI_API_TOKEN=...` (read-only token)
 
 2) CMS env
@@ -48,6 +49,7 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - Next.js lint: `npm run lint`
 - Strapi dev: `cd cms && npm run develop`
 - Docker: `docker compose up -d`
+- Strapi locale smoke test: `node scripts/strapi-locale-smoke.mjs`
 
 ## Strapi Integration Rules
 
@@ -55,6 +57,7 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - **Client components must never import server-only modules**. Use `src/lib/strapi/types.ts` for shared types.
 - `STRAPI_API_TOKEN` is required in **production** and never exposed via `NEXT_PUBLIC_*`.
 - Blog list uses preview fields (no blocks). Blog detail loads full blocks.
+- Blog responses now include `locale` and `localizations` for i18n linking.
 
 
 ## Blog i18n Routing

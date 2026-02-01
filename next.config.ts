@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const strapiPublicUrl = process.env.STRAPI_PUBLIC_URL || process.env.STRAPI_URL;
+type RemotePattern = NonNullable<NextConfig["images"]>["remotePatterns"][number];
 const remotePatterns: NonNullable<NextConfig["images"]>["remotePatterns"] = [
   {
     protocol: "http",
@@ -19,12 +20,13 @@ const remotePatterns: NonNullable<NextConfig["images"]>["remotePatterns"] = [
 if (strapiPublicUrl) {
   try {
     const url = new URL(strapiPublicUrl);
-    remotePatterns.push({
+    const pattern: RemotePattern = {
       protocol: url.protocol.replace(":", ""),
       hostname: url.hostname,
-      port: url.port || undefined,
       pathname: "/**",
-    });
+      ...(url.port ? { port: url.port } : {}),
+    };
+    remotePatterns.push(pattern);
   } catch {}
 }
 

@@ -7,12 +7,14 @@ import { getBlogPostBySlug, getBlogPostLocaleBySlug } from "@/lib/strapi/blog.se
 import { getLegacyBlogPostBySlug } from "@/lib/strapi/legacy";
 import Link from "next/link";
 import { getCookieLocale } from "@/lib/i18n/locale";
+import { normalizeLocale } from "@/lib/i18n/locales";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 type PageProps = {
     params: { slug: string };
+    searchParams?: { locale?: string };
 };
 
 const buildBlogAlternates = (slug: string) => ({
@@ -23,8 +25,17 @@ const buildBlogAlternates = (slug: string) => ({
     },
 });
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const locale = await getCookieLocale();
+const resolveLocale = async (searchParams?: { locale?: string }) => {
+    const override =
+        typeof searchParams?.locale === "string" ? searchParams.locale : null;
+    if (override) {
+        return normalizeLocale(override);
+    }
+    return getCookieLocale();
+};
+
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
+    const locale = await resolveLocale(searchParams);
 
     return {
         alternates: {
@@ -34,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
 }
 
-export default async function BlogPostPage({ params }: PageProps) {
+export default async function BlogPostPage({ params, searchParams }: PageProps) {
     const slug = typeof params.slug === "string" ? params.slug : "";
     if (!slug) {
         return (
@@ -53,7 +64,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             </main>
         );
     }
-    const locale = await getCookieLocale();
+    const locale = await resolveLocale(searchParams);
     const post = CMS_ENABLED
         ? await getBlogPostBySlug(slug, locale)
         : await getLegacyBlogPostBySlug(slug);

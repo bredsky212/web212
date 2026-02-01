@@ -6,6 +6,7 @@ import { CMS_ENABLED } from "@/lib/strapi/client";
 import { getBlogPostPreviews } from "@/lib/strapi/blog.server";
 import { getLegacyBlogPostPreviews } from "@/lib/strapi/legacy";
 import { getCookieLocale } from "@/lib/i18n/locale";
+import { normalizeLocale } from "@/lib/i18n/locales";
 
 export const dynamic = "force-dynamic";
 
@@ -17,8 +18,21 @@ const buildBlogAlternates = () => ({
     },
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-    const locale = await getCookieLocale();
+type PageProps = {
+    searchParams?: { locale?: string };
+};
+
+const resolveLocale = async (searchParams?: { locale?: string }) => {
+    const override =
+        typeof searchParams?.locale === "string" ? searchParams.locale : null;
+    if (override) {
+        return normalizeLocale(override);
+    }
+    return getCookieLocale();
+};
+
+export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
+    const locale = await resolveLocale(searchParams);
 
     return {
         alternates: {
@@ -28,8 +42,8 @@ export async function generateMetadata(): Promise<Metadata> {
     };
 }
 
-export default async function BlogPage() {
-    const locale = await getCookieLocale();
+export default async function BlogPage({ searchParams }: PageProps) {
+    const locale = await resolveLocale(searchParams);
     const posts = CMS_ENABLED
         ? await getBlogPostPreviews(locale)
         : await getLegacyBlogPostPreviews();

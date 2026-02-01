@@ -67,6 +67,7 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - Non-prefixed routes (`/blog`) read the cookie; prefixed routes (`/ar/blog`, `/fr/blog`, `/en/blog`) override it and also persist the cookie.
 - Locale helpers: `src/lib/i18n/locales.ts` and `src/lib/i18n/locale.ts`.
 - Prefixed pages live in `src/app/[locale]/blog/*`.
+- Middleware rewrites prefixed blog routes to `/blog` with `?locale=xx` to avoid same-request cookie lag.
 
 ### Lessons learned
 

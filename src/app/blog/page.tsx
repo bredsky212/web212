@@ -18,7 +18,7 @@ const buildBlogAlternates = () => ({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-    const locale = getCookieLocale();
+    const locale = await getCookieLocale();
 
     return {
         alternates: {
@@ -29,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function BlogPage() {
-    const locale = getCookieLocale();
+    const locale = await getCookieLocale();
     const posts = CMS_ENABLED
         ? await getBlogPostPreviews(locale)
         : await getLegacyBlogPostPreviews();

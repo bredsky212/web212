@@ -69,6 +69,8 @@ Expected output includes locale + title for `ar`, `fr`, `en`.
 
 ## Strapi as code (localization)
 
+Note: Strapi v5 ships i18n in core; there is no separate @strapi/plugin-i18n package in npm.
+
 - Blog localization is defined in schema files under `cms/src/api/**/schema.json`.
 - Do not toggle localization in the admin without committing schema changes, or it will drift on rebuild.
 - Use `scripts/check-strapi-i18n.sh` to verify localization is still enabled in git.

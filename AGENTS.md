@@ -112,6 +112,8 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 
 ## Strapi as Code (i18n)
 
+Note: Strapi v5 ships i18n in core; there is no separate @strapi/plugin-i18n npm package.
+
 - Localization is stored in schema files under `cms/src/api/**/schema.json`.
 - If localization is toggled in admin, you must commit the updated schemas or it will be lost on rebuild.
 - Check with `scripts/check-strapi-i18n.sh`.

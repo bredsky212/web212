@@ -39,10 +39,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function BlogPostPage({ params }: PageProps) {
     const rawLocale =
         typeof params.locale === "string" ? params.locale.toLowerCase() : "";
-    if (!isSupportedLocale(rawLocale)) {
+    if (rawLocale && !isSupportedLocale(rawLocale)) {
         notFound();
     }
-    const locale = rawLocale as SupportedLocale;
+    const locale = (isSupportedLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE) as SupportedLocale;
 
     const post = CMS_ENABLED
         ? await getBlogPostBySlug(params.slug, locale)

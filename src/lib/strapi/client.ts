@@ -15,6 +15,7 @@ export type StrapiFetchOptions = {
 };
 
 const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337';
+const STRAPI_PUBLIC_URL = process.env.STRAPI_PUBLIC_URL || STRAPI_URL;
 const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN;
 
 export const CMS_ENABLED = process.env.CMS_ENABLED === 'true';
@@ -64,7 +65,7 @@ export const getStrapiMediaUrl = (url?: string | null) => {
     return url;
   }
 
-  return `${STRAPI_URL}${url}`;
+  return `${STRAPI_PUBLIC_URL}${url}`;
 };
 
 const isBuildPhase = () =>

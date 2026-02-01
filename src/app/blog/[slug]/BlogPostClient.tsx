@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { BlocksRenderer, type BlocksContent } from "@strapi/blocks-react-renderer";
 import type { BlogPost } from "@/lib/strapi/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function formatDate(value?: string | null) {
     if (!value) {
@@ -24,6 +25,8 @@ export default function BlogPostClient({
     post: BlogPost;
     backHref?: string;
 }) {
+    const { t, dir } = useLanguage();
+    const backArrow = dir === "rtl" ? "→" : "←";
     const formattedDate = formatDate(post.publishedAt);
     const hasBlocks = Array.isArray(post.content);
 
@@ -38,7 +41,9 @@ export default function BlogPostClient({
                     href={backHref}
                     className="text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors text-sm inline-flex items-center gap-2 mb-8"
                 >
-                    &lt;- Back to Blog
+                    {dir === "rtl"
+                        ? `${t("blog.backToBlog")} ${backArrow}`
+                        : `${backArrow} ${t("blog.backToBlog")}`}
                 </Link>
 
                 {post.coverImageUrl && (
@@ -64,7 +69,11 @@ export default function BlogPostClient({
                 </h1>
 
                 <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--text-muted)] mb-12 pb-8 border-b border-[var(--border)]">
-                    {post.authorName && <span>By {post.authorName}</span>}
+                    {post.authorName && (
+                        <span>
+                            {t("blog.by")} {post.authorName}
+                        </span>
+                    )}
                     {post.authorName && formattedDate && <span>•</span>}
                     {formattedDate && <span>{formattedDate}</span>}
                 </div>

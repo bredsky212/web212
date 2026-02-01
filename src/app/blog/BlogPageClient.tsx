@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import type { BlogPostPreview } from "@/lib/strapi/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface BlogPageClientProps {
     posts: BlogPostPreview[];
@@ -27,10 +28,12 @@ function BlogCard({
     post,
     index,
     basePath,
+    featuredLabel,
 }: {
     post: BlogPostPreview;
     index: number;
     basePath: string;
+    featuredLabel: string;
 }) {
     const formattedDate = formatDate(post.publishedAt);
 
@@ -56,7 +59,7 @@ function BlogCard({
                     )}
                     {post.featured && (
                         <span className="inline-block px-2 py-1 text-xs bg-neon-red/20 text-neon-red border border-neon-red/30 rounded mb-4 uppercase tracking-widest font-display">
-                            Featured
+                            {featuredLabel}
                         </span>
                     )}
                     {post.category?.name && (
@@ -86,6 +89,10 @@ export default function BlogPageClient({
     categories,
     basePath = "/blog",
 }: BlogPageClientProps) {
+    const { t } = useLanguage();
+    const titlePrimary = t("blog.title.primary").trim();
+    const titleAccent = t("blog.title.accent").trim();
+    const featuredLabel = t("blog.featured");
     const [activeCategory, setActiveCategory] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -120,10 +127,11 @@ export default function BlogPageClient({
                 className="text-center mb-16"
             >
                 <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-[var(--text-primary)]">
-                    THE <span className="text-neon-red">BLOG</span>
+                    {titlePrimary ? `${titlePrimary} ` : ""}
+                    {titleAccent ? <span className="text-neon-red">{titleAccent}</span> : null}
                 </h1>
                 <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
-                    Updates, analysis, and voices from the GenZ 212 movement.
+                    {t("blog.subtitle")}
                 </p>
             </motion.div>
 
@@ -137,7 +145,7 @@ export default function BlogPageClient({
                 <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
                     <input
                         type="text"
-                        placeholder="Search articles..."
+                        placeholder={t("blog.searchPlaceholder")}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full md:w-80 px-4 py-3 bg-[var(--surface)] border border-[var(--border)] rounded-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] transition-colors"
@@ -151,7 +159,7 @@ export default function BlogPageClient({
                                     : "border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--accent)]/40 hover:text-[var(--text-primary)]"
                             }`}
                         >
-                            All
+                            {t("blog.filter.all")}
                         </button>
                         {categories.map((cat) => (
                             <button
@@ -172,9 +180,11 @@ export default function BlogPageClient({
 
             {posts.length === 0 ? (
                 <div className="text-center py-24 border border-[var(--border)] rounded-lg bg-[var(--surface)]">
-                    <p className="text-[var(--text-secondary)] text-lg mb-2">No articles yet</p>
+                    <p className="text-[var(--text-secondary)] text-lg mb-2">
+                        {t("blog.empty.title")}
+                    </p>
                     <p className="text-[var(--text-muted)] text-sm">
-                        Posts will appear here once added via Strapi.
+                        {t("blog.empty.subtitle")}
                     </p>
                 </div>
             ) : (
@@ -183,11 +193,17 @@ export default function BlogPageClient({
                     {!activeCategory && !searchQuery && featuredPosts.length > 0 && (
                         <section className="mb-16">
                             <h2 className="text-sm uppercase tracking-widest text-[var(--text-muted)] mb-6 font-display">
-                                Featured
+                                {featuredLabel}
                             </h2>
                             <div className="grid md:grid-cols-2 gap-6">
                                 {featuredPosts.map((post, i) => (
-                                    <BlogCard key={post.id} post={post} index={i} basePath={basePath} />
+                                    <BlogCard
+                                        key={post.id}
+                                        post={post}
+                                        index={i}
+                                        basePath={basePath}
+                                        featuredLabel={featuredLabel}
+                                    />
                                 ))}
                             </div>
                         </section>
@@ -196,17 +212,23 @@ export default function BlogPageClient({
                     {/* All Posts */}
                     <section>
                         <h2 className="text-sm uppercase tracking-widest text-[var(--text-muted)] mb-6 font-display">
-                            {activeCategory || "All Posts"}
+                            {activeCategory || t("blog.allPosts")}
                         </h2>
                         {filteredPosts.length > 0 ? (
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredPosts.map((post, i) => (
-                                    <BlogCard key={post.id} post={post} index={i} basePath={basePath} />
+                                    <BlogCard
+                                        key={post.id}
+                                        post={post}
+                                        index={i}
+                                        basePath={basePath}
+                                        featuredLabel={featuredLabel}
+                                    />
                                 ))}
                             </div>
                         ) : (
                             <p className="text-[var(--text-muted)] text-center py-12">
-                                No articles found matching your criteria.
+                                {t("blog.empty.search")}
                             </p>
                         )}
                     </section>

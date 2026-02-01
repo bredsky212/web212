@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { DEFAULT_LOCALE, isSupportedLocale } from '@/lib/i18n/locales';
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, isSupportedLocale } from '@/lib/i18n/locales';
 import { getStrapiMediaUrl, strapiFetch, type StrapiQuery } from './client';
 import type { BlogLocalization, BlogPost, BlogPostPreview } from './types';
 
@@ -270,43 +270,38 @@ export const getBlogPostLocaleBySlug = async (slug: string) => {
     fields: ['slug', 'locale', 'documentId'],
   };
 
-  const response = await strapiFetch<StrapiCollectionResponse<StrapiEntity>>('blog-posts', {
-    query,
-    locale: 'all',
-    cache: 'no-store',
-  });
-
-  if (!response || response.data.length === 0) {
-    const fallback = await strapiFetch<StrapiCollectionResponse<StrapiEntity>>('blog-posts', {
+  for (const candidateLocale of SUPPORTED_LOCALES) {
+    const response = await strapiFetch<StrapiCollectionResponse<StrapiEntity>>('blog-posts', {
       query,
-      locale: DEFAULT_LOCALE,
+      locale: candidateLocale,
       cache: 'no-store',
     });
-    if (!fallback || fallback.data.length === 0) {
-      return null;
+
+    if (!response || response.data.length === 0) {
+      continue;
     }
-    const fallbackEntry = normalizeEntity(fallback.data[0]) as StrapiBlogPost | null;
-    if (!fallbackEntry) {
-      return null;
+
+    const first = normalizeEntity(response.data[0]) as StrapiBlogPost | null;
+    if (!first) {
+      continue;
     }
-    const fallbackSlug = typeof fallbackEntry.slug === 'string' ? fallbackEntry.slug : null;
-    if (!fallbackSlug) {
-      return null;
+
+    const resolvedSlug = typeof first.slug === 'string' ? first.slug : null;
+    const resolvedLocale =
+      typeof first.locale === 'string' && isSupportedLocale(first.locale)
+        ? first.locale
+        : candidateLocale;
+
+    if (!resolvedSlug) {
+      continue;
     }
-    return { locale: DEFAULT_LOCALE, slug: fallbackSlug };
+
+    return { locale: resolvedLocale, slug: resolvedSlug };
   }
 
-  const first = normalizeEntity(response.data[0]) as StrapiBlogPost | null;
-  if (!first) {
-    return null;
+  if (process.env.STRAPI_DEBUG === '1') {
+    console.warn('[STRAPI] slug not found in any locale', slug);
   }
 
-  const resolvedLocale = typeof first.locale === 'string' ? first.locale : null;
-  const resolvedSlug = typeof first.slug === 'string' ? first.slug : null;
-
-  if (!resolvedLocale || !resolvedSlug || !isSupportedLocale(resolvedLocale)) {
-    return null;
-  }
-
-  return { locale: resolvedLocale, slug: resolvedSlug };
+  return null;
 };

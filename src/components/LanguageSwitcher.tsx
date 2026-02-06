@@ -128,7 +128,7 @@ export function LanguageSwitcher() {
         <button
           key={locale}
           onClick={() => handleSelect(locale)}
-          className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+          className={`px-3 cursor-pointer py-1 text-xs font-medium rounded-full transition-colors ${
             activeLocale === locale
               ? 'bg-[var(--accent)] text-white'
               : 'text-[var(--text-secondary)] hover:text-[var(--accent)]'

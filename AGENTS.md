@@ -21,6 +21,7 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 
 - `cp .env.example .env.local`
 - Set:
+  - `NEXT_PUBLIC_SITE_URL=http://localhost:3000` (or your site URL; used for canonical/OG metadata URLs)
   - `CMS_ENABLED=true`
   - `STRAPI_URL=http://localhost:1337`
   - `STRAPI_PUBLIC_URL=` (prod: set to public Strapi host for images)
@@ -46,10 +47,13 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 ## Key Commands
 
 - Next.js dev: `npm run dev`
+- Next.js build: `npm run build`
 - Next.js lint: `npm run lint`
 - Strapi dev: `cd cms && npm run develop`
 - Docker: `docker compose up -d`
 - Strapi locale smoke test: `node scripts/strapi-locale-smoke.mjs`
+- Dependency verification:
+  - `npm ls radix-ui` (should be empty after scoped Radix migration)
 
 ## Strapi Integration Rules
 
@@ -80,6 +84,40 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - Strapi fetchers support `cache` and `revalidate` via `strapiFetch()` in `src/lib/strapi/client.ts`.
 - Blog list uses short revalidate (e.g., 60s). Detail uses longer (e.g., 300s).
 
+## SEO / OpenGraph Metadata
+
+- Central SEO config lives in `src/lib/seo.ts`.
+- Root metadata is wired in `src/app/layout.tsx` via `rootMetadata`.
+- Default OG image is `public/og-default.jpg` (1200x630).
+- Blog list/detail metadata is generated in:
+  - `src/app/blog/page.tsx`
+  - `src/app/blog/[slug]/page.tsx`
+  - `src/app/[locale]/blog/page.tsx`
+  - `src/app/[locale]/blog/[slug]/page.tsx`
+- Prefer setting `NEXT_PUBLIC_SITE_URL` in all environments so metadata uses correct absolute URLs.
+
+## Blog Content Rendering Lessons Learned
+
+- Blog detail content can arrive as either:
+  - Strapi blocks (JSON array), rendered with `BlocksRenderer`
+  - Raw HTML string (`<p>`, `<ul>`, `<h1>`, etc.), rendered with `dangerouslySetInnerHTML`
+- Rich-content styling for blog detail is explicitly defined in:
+  - `src/app/blog/[slug]/BlogPostClient.tsx`
+- Do not assume Tailwind Typography (`prose`) is sufficient; element-level selectors were added for predictable rendering.
+
+## Mobile / RTL Lessons Learned
+
+- Use logical utilities (`text-start`, `ms-auto`, `border-s`, `ps`) instead of physical LTR utilities (`text-left`, `ml-*`, `border-l`, `pl-*`) for RTL-safe layouts.
+- Manifesto accordion RTL fix is in `src/components/ui/accordion.tsx`.
+- Timeline mobile date marker layout fix is in `src/app/timeline/page.tsx`.
+- History mobile overflow and RTL fixes are in `src/app/history/page.tsx`.
+
+## History Figures (Localized SVG)
+
+- Localized history figures are in `public/figures/history/*.svg` (`ar`, `fr`, `en` variants).
+- History page selects figure locale from current app language with EN fallback.
+- If Arabic SVG text renders as `????`, file content is already corrupted; regenerate/write files explicitly as UTF-8.
+
 ## Encoding & Windows UTF-8 Lessons Learned
 
 - **Always read/write files as UTF-8** in PowerShell to avoid mangled characters (e.g., bullets `•` turning into `�`).
@@ -87,6 +125,8 @@ This guide helps coding agents work effectively in this repo with minimal fricti
   - `py -3 -Xutf8 -c "from pathlib import Path; print(Path('path').read_text(encoding='utf-8'))"`
   - `Get-Content -Encoding UTF8` and `Set-Content -Encoding UTF8`
 - Avoid plain `Get-Content` (defaults to CP1252 on Windows) when file contains non-ASCII.
+- For paths containing brackets (e.g., `src/app/blog/[slug]/...`), use `-LiteralPath` in PowerShell.
+- For localized SVGs, verify glyph integrity by checking files do not contain placeholder `?` characters.
 
 ## Branching & Commits
 
@@ -97,6 +137,7 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 ## Known Lint Caveats
 
 - `npm run lint` currently reports pre-existing warnings/errors unrelated to Strapi (e.g., unescaped entities in other pages, `setState` in effects).
+- `npm test` script is not defined in this repo at the moment.
 - If your task requires clean lint, coordinate fixes for:
   - `src/app/page.tsx`
   - `src/app/manifesto/page.tsx`
@@ -115,6 +156,10 @@ This guide helps coding agents work effectively in this repo with minimal fricti
 - Strapi schemas: `cms/src/api/blog-post/.../schema.json` and `cms/src/api/blog-category/.../schema.json`
 - Language switcher: `src/components/LanguageSwitcher.tsx` (wired in `src/components/Navbar.tsx`)
 - Locale middleware: `middleware.ts`
+- SEO helpers: `src/lib/seo.ts`
+- History page: `src/app/history/page.tsx`
+- Timeline page: `src/app/timeline/page.tsx`
+- History figures: `public/figures/history/*.svg`
 
 
 ## Strapi as Code (i18n)

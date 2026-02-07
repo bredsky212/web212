@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import {
@@ -69,19 +69,24 @@ const buildPrefixedPath = (pathname: string, locale: SupportedLocale) => {
 export function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname() || '/';
-  const { setLang } = useLanguage();
-  const [activeLocale, setActiveLocale] = useState<SupportedLocale>(DEFAULT_LOCALE);
+  const { lang, setLang } = useLanguage();
+  const activeLocale = useMemo<SupportedLocale>(() => {
+    const pathLocale = getLocaleFromPath(pathname);
+    const cookieLocale = getLocaleFromCookie();
+    const contextLocale = isSupportedLocale(lang) ? lang : null;
+    return pathLocale || cookieLocale || contextLocale || DEFAULT_LOCALE;
+  }, [lang, pathname]);
 
   useEffect(() => {
     const pathLocale = getLocaleFromPath(pathname);
     const cookieLocale = getLocaleFromCookie();
     const nextLocale = pathLocale || cookieLocale || DEFAULT_LOCALE;
-    setActiveLocale(nextLocale);
-    setLang(nextLocale);
-  }, [pathname, setLang]);
+    if (nextLocale !== lang) {
+      setLang(nextLocale);
+    }
+  }, [lang, pathname, setLang]);
 
   const handleSelect = async (locale: SupportedLocale) => {
-    setActiveLocale(locale);
     setLang(locale);
 
     if (isBlogPath(pathname)) {

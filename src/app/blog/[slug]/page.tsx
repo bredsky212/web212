@@ -8,6 +8,7 @@ import { getBlogPostBySlug, getBlogPostLocaleBySlug } from "@/lib/strapi/blog.se
 import { getLegacyBlogPostBySlug } from "@/lib/strapi/legacy";
 import { getCookieLocale } from "@/lib/i18n/locale";
 import { normalizeLocale } from "@/lib/i18n/locales";
+import { buildPageMetadata, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -47,10 +48,35 @@ const resolveSlug = (params: { slug: string }, searchParams?: { slug?: string })
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
     const locale = await resolveLocale(searchParams);
     const slug = resolveSlug(params, searchParams);
+    const canonicalPath = `/${locale}/blog/${slug}`;
+
+    const post = slug
+        ? CMS_ENABLED
+            ? await getBlogPostBySlug(slug, locale)
+            : await getLegacyBlogPostBySlug(slug)
+        : null;
+
+    const title = post?.title ?? "Blog Post";
+    const description =
+        post?.excerpt ??
+        "Read this Gen-Z 212 blog article covering movement updates, analysis, and community context.";
+    const baseMetadata = buildPageMetadata({
+        title,
+        description,
+        path: canonicalPath,
+        locale,
+        image: post?.coverImageUrl
+            ? {
+                url: post.coverImageUrl,
+                alt: post.title,
+            }
+            : DEFAULT_OG_IMAGE,
+    });
 
     return {
+        ...baseMetadata,
         alternates: {
-            canonical: `/${locale}/blog/${slug}`,
+            canonical: canonicalPath,
             ...buildBlogAlternates(slug),
         },
     };

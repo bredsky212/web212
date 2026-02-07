@@ -7,6 +7,7 @@ import { getBlogPostPreviews } from "@/lib/strapi/blog.server";
 import { getLegacyBlogPostPreviews } from "@/lib/strapi/legacy";
 import { getCookieLocale } from "@/lib/i18n/locale";
 import { normalizeLocale } from "@/lib/i18n/locales";
+import { buildPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -33,10 +34,19 @@ const resolveLocale = async (searchParams?: { locale?: string }) => {
 
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
     const locale = await resolveLocale(searchParams);
+    const canonicalPath = `/${locale}/blog`;
+    const baseMetadata = buildPageMetadata({
+        title: "Blog",
+        description:
+            "Explore Gen-Z 212 reports, reflections, and updates on the movement timeline and civic action.",
+        path: canonicalPath,
+        locale,
+    });
 
     return {
+        ...baseMetadata,
         alternates: {
-            canonical: `/${locale}/blog`,
+            canonical: canonicalPath,
             ...buildBlogAlternates(),
         },
     };

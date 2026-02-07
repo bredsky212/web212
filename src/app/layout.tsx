@@ -4,6 +4,7 @@ import { Inter, Orbitron, Noto_Sans_Arabic } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, isSupportedLocale } from "@/lib/i18n/locales";
+import { rootMetadata } from "@/lib/seo";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,10 +21,7 @@ const notoArabic = Noto_Sans_Arabic({
   subsets: ["arabic"],
 });
 
-export const metadata: Metadata = {
-  title: "Gen-Z 212 | The Digital Evolution",
-  description: "A digital archive of the Gen-Z era, evolved.",
-};
+export const metadata: Metadata = rootMetadata;
 
 export default async function RootLayout({
   children,

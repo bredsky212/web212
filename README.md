@@ -7,6 +7,7 @@ Next.js site with a Strapi CMS backend (v5) for editorial content.
 1) Web app env
 
    - Copy `.env.example` to `.env.local` and fill in required values.
+   - Set `NEXT_PUBLIC_SITE_URL` (e.g. `https://your-domain.tld`) so canonical/OG URLs resolve correctly.
    - For Strapi mode, set:
      - `STRAPI_DEBUG=1` (optional; logs Strapi requests)
      - `CMS_ENABLED=true`
@@ -49,6 +50,64 @@ Next.js site with a Strapi CMS backend (v5) for editorial content.
 
    - With `CMS_ENABLED=true`, the blog renders from Strapi using the server-side token.
 
+## Recent App Updates (This Pass)
+
+### Dependencies / UI primitives
+
+- Removed umbrella `radix-ui` package and migrated to scoped primitives only:
+  - `@radix-ui/react-accordion`
+  - `@radix-ui/react-select`
+- Updated imports:
+  - `src/components/ui/accordion.tsx`
+  - `src/components/ui/Select.tsx`
+
+### RTL + mobile UI fixes
+
+- Manifesto accordion RTL alignment fixed by using logical utilities (`text-start`, `ms-auto`) in:
+  - `src/components/ui/accordion.tsx`
+- Timeline mobile date markers now render as centered overlapping circles above cards:
+  - `src/app/timeline/page.tsx`
+- History mobile overflow/RTL fixes:
+  - safer title splitting (no broken ampersand behavior in Arabic)
+  - responsive heading sizing and wrapping
+  - logical border/padding utilities (`border-s`, `ps`)
+  - `min-w-0`/`w-full` guards on section columns
+  - file: `src/app/history/page.tsx`
+
+### History figures (localized SVGs)
+
+- Replaced placeholder figure blocks in history with localized SVG assets:
+  - `public/figures/history/fig01-background.{ar,en,fr}.svg`
+  - `public/figures/history/fig02-spark.{ar,en,fr}.svg`
+  - `public/figures/history/fig03-movement.{ar,en,fr}.svg`
+  - `public/figures/history/fig04-why-discord.{ar,en,fr}.svg`
+- History page now chooses figure locale from active app language (`ar`/`fr`/`en`) with fallback to `en`.
+
+### Blog detail rendering + typography
+
+- Blog post detail now supports both content formats:
+  - Strapi Blocks JSON via `BlocksRenderer`
+  - raw HTML strings via `dangerouslySetInnerHTML`
+- Added explicit rich-content element styling for headings, paragraphs, lists, blockquotes, code/pre, links, tables, and images:
+  - `src/app/blog/[slug]/BlogPostClient.tsx`
+- This fix applies to blog post detail pages only (not listing cards).
+
+### SEO / Open Graph metadata
+
+- Added centralized metadata helpers:
+  - `src/lib/seo.ts`
+- Root metadata now includes:
+  - canonical base setup (`metadataBase`)
+  - description, keywords, robots
+  - default Open Graph + Twitter card metadata
+- Blog list/detail metadata now includes page-level OG/Twitter fields and canonical URLs:
+  - `src/app/blog/page.tsx`
+  - `src/app/blog/[slug]/page.tsx`
+  - `src/app/[locale]/blog/page.tsx`
+  - `src/app/[locale]/blog/[slug]/page.tsx`
+- Default social image asset:
+  - `public/og-default.jpg` (1200x630)
+
 
 ## Blog i18n (ar/fr/en)
 
@@ -87,6 +146,7 @@ Note: Strapi v5 ships i18n in core; there is no separate @strapi/plugin-i18n pac
 
 - Use HTTPS for both Strapi and the website.
 - Set `NEXTAUTH_SECRET` (and ideally `NEXTAUTH_URL`) in production to avoid auth runtime errors.
+- Set `NEXT_PUBLIC_SITE_URL` in production (used by metadata for canonical + OG absolute URLs).
 - Keep `STRAPI_API_TOKEN` on the server only; never expose it via `NEXT_PUBLIC_*`.
 - Lock down Strapi Public permissions (no blog access).
 - Configure `CORS_ORIGINS` to your web domain(s).

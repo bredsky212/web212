@@ -1,0 +1,129 @@
+<svg lang="ar" xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="t d">
+  <title id="t">الحركة: الخريطة وقنوات التنسيق</title>
+  <desc id="d">خريطة مبسطة للمغرب مع مؤشرات مدن وأيقونات عامة للدردشة والفيديو القصير ومشاركة الصور.</desc>
+
+  <defs>
+    <linearGradient id="bgGrad3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff2b2b" stop-opacity="0.12"/>
+      <stop offset="55%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#ff2b2b" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="cardGrad3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.07"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.03"/>
+    </linearGradient>
+    <filter id="shadow3" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+    <filter id="glow3" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <style>
+    :root{
+      --accent: var(--neon-red, #ff2b2b);
+      --text: var(--fig-text, rgba(255,255,255,0.92));
+      --muted: var(--fig-muted, rgba(255,255,255,0.68));
+      --stroke: var(--fig-stroke, rgba(255,255,255,0.40));
+      --border: var(--fig-border, rgba(255,255,255,0.16));
+    }
+    .frame{ fill: rgba(0,0,0,0.18); stroke: var(--border); stroke-width: 2; }
+    .card{ fill: url(#cardGrad3); stroke: var(--border); stroke-width: 2; }
+    .s{ stroke: var(--stroke); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .a{ stroke: var(--accent); stroke-width: 3.4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .mapFill{ fill: rgba(255,255,255,0.05); stroke: rgba(255,255,255,0.22); stroke-width: 2.5; }
+    .h{ font: 850 18px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--text); }
+    .p{ font: 550 14px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: rgba(255,255,255,0.74); }
+    .m{ font: 700 14px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; fill: var(--muted); letter-spacing:.14em;}
+    .tag{ fill: rgba(0,0,0,0.35); stroke: rgba(255,255,255,0.12); stroke-width: 1.5; }
+  </style>
+
+  <rect x="40" y="40" width="1120" height="720" rx="26" class="frame" filter="url(#shadow3)"/>
+  <rect x="40" y="40" width="1120" height="720" rx="26" fill="url(#bgGrad3)"/>
+
+  <g transform="translate(140,120)">
+    <text class="m" x="0" y="-20">إشارات المدن</text>
+
+    <rect x="-10" y="-6" width="760" height="540" rx="22" class="card"/>
+
+    <g transform="translate(120,40)">
+      <path class="mapFill" d="M260,24
+        C320,0 392,10 434,44
+        C486,86 548,92 600,86
+        C652,80 702,118 716,162
+        C730,206 716,254 696,296
+        C672,348 690,396 664,456
+        C632,528 544,556 486,578
+        C428,600 366,622 316,596
+        C270,574 236,602 192,580
+        C140,554 118,494 112,442
+        C106,392 72,360 78,304
+        C84,248 118,206 154,174
+        C196,138 176,86 208,56
+        C224,42 238,34 260,24 Z"/>
+
+      <path class="s" d="M240,130 C300,170 380,188 470,170" opacity="0.18"/>
+      <path class="s" d="M210,220 C310,260 420,268 560,238" opacity="0.14"/>
+
+      <g transform="translate(300,176)">
+        <path class="a" d="M0,0 a18,18 0 0 1 36,0 c0,12 -18,34 -18,34 S0,12 0,0 Z" filter="url(#glow3)"/>
+        <circle cx="18" cy="0" r="5.2" fill="var(--accent)"/>
+        <rect class="tag" x="44" y="-18" width="104" height="34" rx="10"/>
+        <text class="p" x="56" y="5">الرباط</text>
+      </g>
+
+      <g transform="translate(280,235)">
+        <path class="a" d="M0,0 a18,18 0 0 1 36,0 c0,12 -18,34 -18,34 S0,12 0,0 Z" filter="url(#glow3)"/>
+        <circle cx="18" cy="0" r="5.2" fill="var(--accent)"/>
+        <rect class="tag" x="44" y="-18" width="136" height="34" rx="10"/>
+        <text class="p" x="56" y="5">الدار البيضاء</text>
+      </g>
+
+      <g transform="translate(360,330)">
+        <path class="a" d="M0,0 a18,18 0 0 1 36,0 c0,12 -18,34 -18,34 S0,12 0,0 Z" filter="url(#glow3)"/>
+        <circle cx="18" cy="0" r="5.2" fill="var(--accent)"/>
+        <rect class="tag" x="44" y="-18" width="134" height="34" rx="10"/>
+        <text class="p" x="56" y="5">مراكش</text>
+      </g>
+
+      <path class="s" d="M318,204 C210,168 166,150 120,132" opacity="0.7"/>
+      <path class="s" d="M298,262 C188,260 160,274 120,300" opacity="0.7"/>
+      <path class="s" d="M378,356 C250,410 190,450 120,468" opacity="0.7"/>
+    </g>
+
+    <g transform="translate(28,70)">
+      <g>
+        <rect class="card" x="0" y="0" rx="18" width="170" height="120"/>
+        <path class="a" d="M34,40 a18,18 0 0 1 18,-18 h70 a18,18 0 0 1 18,18 v30 a18,18 0 0 1 -18,18 h-28 l-22,16 v-16 h-20 a18,18 0 0 1 -18,-18z" filter="url(#glow3)"/>
+        <text class="p" x="34" y="106">دردشة</text>
+      </g>
+
+      <g transform="translate(0,160)">
+        <rect class="card" x="0" y="0" rx="18" width="170" height="120"/>
+        <path class="a" d="M44,32 h82 a18,18 0 0 1 18,18 v26 a18,18 0 0 1 -18,18 h-82 a18,18 0 0 1 -18,-18 v-26 a18,18 0 0 1 18,-18z" filter="url(#glow3)"/>
+        <path class="a" d="M84,44 L112,62 L84,80 Z" filter="url(#glow3)"/>
+        <text class="p" x="34" y="106">فيديو قصير</text>
+      </g>
+
+      <g transform="translate(0,320)">
+        <rect class="card" x="0" y="0" rx="18" width="170" height="120"/>
+        <rect class="a" x="44" y="34" width="82" height="56" rx="14" filter="url(#glow3)"/>
+        <circle class="a" cx="85" cy="62" r="13" filter="url(#glow3)"/>
+        <path class="a" d="M58,34 l10,-12 h34 l10,12" filter="url(#glow3)"/>
+        <text class="p" x="34" y="106">صورة</text>
+      </g>
+    </g>
+  </g>
+
+  <g transform="translate(690,560)">
+    <rect class="card" x="0" y="0" rx="20" width="430" height="140"/>
+    <path class="a" d="M34,38 h48 l12,-16 h146 l12,16 h160" opacity="0.9" filter="url(#glow3)"/>
+    <text class="h" x="34" y="78">"الملاعب موجودة..."</text>
+    <text class="h" x="34" y="108">"فأين المستشفيات؟"</text>
+  </g>
+</svg>

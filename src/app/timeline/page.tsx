@@ -102,7 +102,14 @@ export default function TimelinePage() {
                   index % 2 === 0 ? "md:pr-12 md:text-right" : "md:pl-12"
                 }`}
               >
-                <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-6 hover:border-neon-red/50 transition-colors duration-300 group">
+                <div className="relative bg-[var(--surface)] border border-[var(--border)] rounded-lg p-6 pt-10 md:pt-6 hover:border-neon-red/50 transition-colors duration-300 group">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 md:hidden">
+                    <div className="w-14 h-14 rounded-full bg-[var(--background)] border-2 border-neon-red flex items-center justify-center z-10 shadow-[0_0_20px_rgba(139,0,0,0.3)]">
+                      <span className="text-neon-red font-display font-bold text-[10px] leading-tight text-center">
+                        {item.year}
+                      </span>
+                    </div>
+                  </div>
                   <span className="text-4xl mb-4 block">{item.icon}</span>
                   <span className="text-neon-red font-display tracking-widest text-xs mb-1 block uppercase">
                     {t(`timeline.event.${item.id}.era`)}
@@ -113,9 +120,6 @@ export default function TimelinePage() {
                   <p className="pb-4 text-[var(--text-secondary)] text-sm leading-relaxed">
                     {t(`timeline.event.${item.id}.desc`)}
                   </p>
-                  <span className="text-neon-red font-display font-bold text-xs md:hidden">
-                    {item.year}
-                  </span>
                 </div>
               </div>
 

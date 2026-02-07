@@ -1,23 +1,52 @@
 "use client";
 
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const sections = [
-    { id: "background", year: "Pre-2025" },
-    { id: "spark", year: "September 2025" },
-    { id: "movement", year: "27 September 2025" },
+    { id: "background", year: "Pre-2025", figure: "fig01-background" },
+    { id: "spark", year: "September 2025", figure: "fig02-spark" },
+    { id: "movement", year: "27 September 2025", figure: "fig03-movement" },
 ];
 
+type FigureLocale = "ar" | "en" | "fr";
+
+const sectionFigureAlt: Record<string, Record<FigureLocale, string>> = {
+    background: {
+        en: "Context snapshot infographic",
+        fr: "Infographie du contexte",
+        ar: "إنفوجرافيك لقطة الخلفية",
+    },
+    spark: {
+        en: "Spark timeline and growth infographic",
+        fr: "Infographie de la chronologie et de la croissance",
+        ar: "إنفوجرافيك الشرارة والخط الزمني والنمو",
+    },
+    movement: {
+        en: "Movement map and coordination channels infographic",
+        fr: "Infographie de la carte du mouvement et des canaux de coordination",
+        ar: "إنفوجرافيك خريطة الحركة وقنوات التنسيق",
+    },
+};
+
+const discordFigureAlt: Record<FigureLocale, string> = {
+    en: "Decentralized coordination and anonymity infographic",
+    fr: "Infographie de coordination decentralisee et anonymat",
+    ar: "إنفوجرافيك التنسيق اللامركزي وإخفاء الهوية",
+};
+
 export default function HistoryPage() {
-    const { t } = useLanguage();
+    const { t, lang } = useLanguage();
     const historyTitle = t("history.title");
     const historyTitleParts = historyTitle.split(" & ");
     const hasAccentTitle = historyTitleParts.length > 1;
     const historyTitlePrimary = hasAccentTitle ? historyTitleParts[0] : historyTitle;
     const historyTitleAccent = hasAccentTitle ? historyTitleParts.slice(1).join(" & ") : "";
+    const figureLocale: FigureLocale =
+        lang === "ar" || lang === "fr" || lang === "en" ? lang : "en";
 
     return (
         <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] selection:bg-neon-red selection:text-white">
@@ -72,15 +101,19 @@ export default function HistoryPage() {
                                 </div>
                             </div>
                             <div className="flex-1 w-full min-w-0 flex justify-center">
-                                <div className="w-full h-64 md:h-80 bg-[var(--surface)] border border-[var(--border)] rounded-lg relative overflow-hidden group">
-                                    <div className="absolute inset-0 bg-neon-red/5 group-hover:bg-neon-red/10 transition-colors duration-500" />
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <div className="w-24 h-1 bg-neon-red/50 blur-lg group-hover:w-48 transition-all duration-700" />
-                                    </div>
-                                    <div className="absolute font-mono text-xs text-[var(--text-secondary)] bottom-4 right-4">
+                                <figure className="w-full overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface)]">
+                                    <Image
+                                        src={`/figures/history/${section.figure}.${figureLocale}.svg`}
+                                        alt={sectionFigureAlt[section.id]?.[figureLocale] ?? sectionFigureAlt[section.id]?.en ?? "History figure"}
+                                        width={1200}
+                                        height={800}
+                                        className="block h-auto w-full"
+                                        sizes="(min-width: 768px) 50vw, 100vw"
+                                    />
+                                    <figcaption className="border-t border-[var(--border)] bg-[var(--surface)]/60 px-3 py-2 text-end font-mono text-xs text-[var(--text-muted)]">
                                         FIG.0{index + 1}
-                                    </div>
-                                </div>
+                                    </figcaption>
+                                </figure>
                             </div>
                         </motion.section>
                     ))}
@@ -99,6 +132,19 @@ export default function HistoryPage() {
                     <p className="text-[var(--text-secondary)] text-sm italic">
                         {t("history.discord.footer")}
                     </p>
+                    <figure className="mt-8 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface)]">
+                        <Image
+                            src={`/figures/history/fig04-why-discord.${figureLocale}.svg`}
+                            alt={discordFigureAlt[figureLocale]}
+                            width={1200}
+                            height={800}
+                            className="block h-auto w-full"
+                            sizes="(min-width: 768px) 896px, 100vw"
+                        />
+                        <figcaption className="border-t border-[var(--border)] bg-[var(--surface)]/60 px-3 py-2 text-end font-mono text-xs text-[var(--text-muted)]">
+                            FIG.04
+                        </figcaption>
+                    </figure>
                 </motion.div>
 
             </div>

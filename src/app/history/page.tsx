@@ -13,6 +13,11 @@ const sections = [
 
 export default function HistoryPage() {
     const { t } = useLanguage();
+    const historyTitle = t("history.title");
+    const historyTitleParts = historyTitle.split(" & ");
+    const hasAccentTitle = historyTitleParts.length > 1;
+    const historyTitlePrimary = hasAccentTitle ? historyTitleParts[0] : historyTitle;
+    const historyTitleAccent = hasAccentTitle ? historyTitleParts.slice(1).join(" & ") : "";
 
     return (
         <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] selection:bg-neon-red selection:text-white">
@@ -25,8 +30,14 @@ export default function HistoryPage() {
                     transition={{ duration: 0.8 }}
                     className="text-center mb-24"
                 >
-                    <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-[var(--text-primary)]">
-                        {t("history.title").split(" & ")[0]} & <span className="text-neon-red">{t("history.title").split(" & ")[1]}</span>
+                    <h1 className="text-3xl sm:text-4xl md:text-6xl font-display font-bold mb-6 text-[var(--text-primary)] leading-tight break-words">
+                        {historyTitlePrimary}
+                        {historyTitleAccent ? (
+                            <>
+                                {" "}
+                                <span className="text-neon-red">&amp; {historyTitleAccent}</span>
+                            </>
+                        ) : null}
                     </h1>
                     <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
                         {t("history.subtitle")}
@@ -42,20 +53,25 @@ export default function HistoryPage() {
                             viewport={{ once: true, margin: "-100px" }}
                             transition={{ duration: 0.8 }}
                             className={`flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                                } gap-12 items-center`}
+                                } gap-12 items-center w-full`}
                         >
-                            <div className="flex-1">
-                                <div className="border-l-2 border-neon-red pl-6 py-2">
-                                    <span className="text-neon-red font-display tracking-widest text-sm mb-2 block">
+                            <div className="flex-1 w-full min-w-0">
+                                <div className="border-s-2 border-neon-red ps-6 py-2">
+                                    <span
+                                        dir="ltr"
+                                        className="text-neon-red font-display tracking-widest text-sm mb-2 block w-fit"
+                                    >
                                         {section.year}
                                     </span>
-                                    <h2 className="text-3xl font-bold mb-4 font-display text-[var(--foreground)]">{t(`history.section.${section.id}.title`)}</h2>
-                                    <p className="text-[var(--text-secondary)] leading-relaxed text-lg">
+                                    <h2 className="text-2xl sm:text-3xl font-bold mb-4 font-display text-[var(--foreground)] break-words">
+                                        {t(`history.section.${section.id}.title`)}
+                                    </h2>
+                                    <p className="text-[var(--text-secondary)] leading-relaxed text-lg break-words">
                                         {t(`history.section.${section.id}.content`)}
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex-1 flex justify-center">
+                            <div className="flex-1 w-full min-w-0 flex justify-center">
                                 <div className="w-full h-64 md:h-80 bg-[var(--surface)] border border-[var(--border)] rounded-lg relative overflow-hidden group">
                                     <div className="absolute inset-0 bg-neon-red/5 group-hover:bg-neon-red/10 transition-colors duration-500" />
                                     <div className="absolute inset-0 flex items-center justify-center">

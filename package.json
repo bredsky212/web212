@@ -10,6 +10,8 @@
     "check:utf8": "python3 scripts/check-utf8.py"
   },
   "dependencies": {
+    "@radix-ui/react-accordion": "^1.2.12",
+    "@radix-ui/react-select": "^2.2.6",
     "@strapi/blocks-react-renderer": "^1.0.2",
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^3.0.3",
@@ -19,7 +21,6 @@
     "mongoose": "^9.1.4",
     "next": "16.1.6",
     "next-auth": "^4.24.13",
-    "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "tailwind-merge": "^3.4.0"

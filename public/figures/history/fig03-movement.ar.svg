@@ -1,129 +1,156 @@
-<svg lang="ar" xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="t d">
-  <title id="t">الحركة: الخريطة وقنوات التنسيق</title>
-  <desc id="d">خريطة مبسطة للمغرب مع مؤشرات مدن وأيقونات عامة للدردشة والفيديو القصير ومشاركة الصور.</desc>
-
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bgGrad3" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ff2b2b" stop-opacity="0.12"/>
-      <stop offset="55%" stop-color="#000" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#ff2b2b" stop-opacity="0.06"/>
+    <linearGradient id="bgGrad3" x1="40" y1="40" x2="1160" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3A141C" stop-opacity="0.35"/>
+      <stop offset="0.55" stop-color="#1B2028" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#0F141B" stop-opacity="0.30"/>
     </linearGradient>
-    <linearGradient id="cardGrad3" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.07"/>
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.03"/>
-    </linearGradient>
-    <filter id="shadow3" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity="0.35"/>
-    </filter>
-    <filter id="glow3" x="-30%" y="-30%" width="160%" height="160%">
+
+    <radialGradient id="softVignette3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(520 320) rotate(60) scale(900 700)">
+      <stop stop-color="#FFFFFF" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.18"/>
+    </radialGradient>
+
+    <filter id="glowRed3" x="-40%" y="-40%" width="180%" height="180%">
       <feGaussianBlur stdDeviation="6" result="b"/>
       <feMerge>
         <feMergeNode in="b"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
+
+    <clipPath id="frameClip3">
+      <rect x="40" y="40" width="1120" height="720" rx="18"/>
+    </clipPath>
+
+    <style>
+      .sans { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Noto Sans Arabic", "Noto Naskh Arabic", "Noto Sans", sans-serif; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    </style>
   </defs>
+  <g clip-path="url(#frameClip3)">
+    <rect x="40" y="40" width="1120" height="720" rx="18" fill="url(#bgGrad3)"/>
+    <rect x="40" y="40" width="1120" height="720" rx="18" fill="url(#softVignette3)"/>
+    <rect x="40" y="40" width="1120" height="720" rx="18" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="1.2"/>
 
-  <style>
-    :root{
-      --accent: var(--neon-red, #ff2b2b);
-      --text: var(--fig-text, rgba(255,255,255,0.92));
-      --muted: var(--fig-muted, rgba(255,255,255,0.68));
-      --stroke: var(--fig-stroke, rgba(255,255,255,0.40));
-      --border: var(--fig-border, rgba(255,255,255,0.16));
-    }
-    .frame{ fill: rgba(0,0,0,0.18); stroke: var(--border); stroke-width: 2; }
-    .card{ fill: url(#cardGrad3); stroke: var(--border); stroke-width: 2; }
-    .s{ stroke: var(--stroke); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .a{ stroke: var(--accent); stroke-width: 3.4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .mapFill{ fill: rgba(255,255,255,0.05); stroke: rgba(255,255,255,0.22); stroke-width: 2.5; }
-    .h{ font: 850 18px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: var(--text); }
-    .p{ font: 550 14px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: rgba(255,255,255,0.74); }
-    .m{ font: 700 14px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; fill: var(--muted); letter-spacing:.14em;}
-    .tag{ fill: rgba(0,0,0,0.35); stroke: rgba(255,255,255,0.12); stroke-width: 1.5; }
-  </style>
+    <!-- Extra defs for map clipping -->
+    <defs>
+      <clipPath id="mapPanelClip3">
+        <rect x="390" y="200" width="760" height="560" rx="16"/>
+      </clipPath>
+    </defs>
 
-  <rect x="40" y="40" width="1120" height="720" rx="26" class="frame" filter="url(#shadow3)"/>
-  <rect x="40" y="40" width="1120" height="720" rx="26" fill="url(#bgGrad3)"/>
+    <g transform="translate(90 70)">
+      <text class="sans" x="0" y="30" font-size="11" font-weight="700" letter-spacing="1.8" fill="#FFFFFF" fill-opacity="0.62">إشارات المدن</text>
 
-  <g transform="translate(140,120)">
-    <text class="m" x="0" y="-20">إشارات المدن</text>
+      <!-- Left icon stack panel -->
+      <rect x="0" y="60" width="260" height="560" rx="16" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.12"/>
 
-    <rect x="-10" y="-6" width="760" height="540" rx="22" class="card"/>
+      <g transform="translate(36 110)">
+        <!-- Chat -->
+        <rect x="0" y="0" width="188" height="132" rx="14" fill="#FFFFFF" fill-opacity="0.03" stroke="#FFFFFF" stroke-opacity="0.12"/>
+        <g filter="url(#glowRed3)" transform="translate(40 36)">
+          <path d="M0 18c0-10 8-18 18-18h66c10 0 18 8 18 18v26c0 10-8 18-18 18H34l-16 14v-14H18C8 62 0 54 0 44V18Z"
+                fill="#FF2A2A" fill-opacity="0.06" stroke="#FF2A2A" stroke-width="2.4" stroke-linejoin="round"/>
+        </g>
+        <text class="sans" x="20" y="118" font-size="11" fill="#FFFFFF" fill-opacity="0.55">دردشة</text>
 
-    <g transform="translate(120,40)">
-      <path class="mapFill" d="M260,24
-        C320,0 392,10 434,44
-        C486,86 548,92 600,86
-        C652,80 702,118 716,162
-        C730,206 716,254 696,296
-        C672,348 690,396 664,456
-        C632,528 544,556 486,578
-        C428,600 366,622 316,596
-        C270,574 236,602 192,580
-        C140,554 118,494 112,442
-        C106,392 72,360 78,304
-        C84,248 118,206 154,174
-        C196,138 176,86 208,56
-        C224,42 238,34 260,24 Z"/>
+        <!-- Short video -->
+        <rect x="0" y="160" width="188" height="132" rx="14" fill="#FFFFFF" fill-opacity="0.03" stroke="#FFFFFF" stroke-opacity="0.12"/>
+        <g filter="url(#glowRed3)" transform="translate(62 202)">
+          <path d="M0 0h62a12 12 0 0 1 12 12v34a12 12 0 0 1-12 12H0a12 12 0 0 1-12-12V12A12 12 0 0 1 0 0Z"
+                fill="#FF2A2A" fill-opacity="0.05" stroke="#FF2A2A" stroke-width="2.4"/>
+          <path d="M26 14l20 15-20 15V14Z" fill="#FF2A2A"/>
+        </g>
+        <text class="sans" x="20" y="278" font-size="11" fill="#FFFFFF" fill-opacity="0.55">فيديو قصير</text>
 
-      <path class="s" d="M240,130 C300,170 380,188 470,170" opacity="0.18"/>
-      <path class="s" d="M210,220 C310,260 420,268 560,238" opacity="0.14"/>
-
-      <g transform="translate(300,176)">
-        <path class="a" d="M0,0 a18,18 0 0 1 36,0 c0,12 -18,34 -18,34 S0,12 0,0 Z" filter="url(#glow3)"/>
-        <circle cx="18" cy="0" r="5.2" fill="var(--accent)"/>
-        <rect class="tag" x="44" y="-18" width="104" height="34" rx="10"/>
-        <text class="p" x="56" y="5">الرباط</text>
+        <!-- Photo -->
+        <rect x="0" y="320" width="188" height="132" rx="14" fill="#FFFFFF" fill-opacity="0.03" stroke="#FFFFFF" stroke-opacity="0.12"/>
+        <g filter="url(#glowRed3)" transform="translate(60 362)">
+          <path d="M10 10h68c6 0 10 4 10 10v44c0 6-4 10-10 10H10c-6 0-10-4-10-10V20c0-6 4-10 10-10Z"
+                fill="#FF2A2A" fill-opacity="0.05" stroke="#FF2A2A" stroke-width="2.4"/>
+          <circle cx="44" cy="42" r="12" stroke="#FF2A2A" stroke-width="2.4"/>
+          <path d="M18 12l8-10h36l8 10" stroke="#FF2A2A" stroke-width="2.4" stroke-linecap="round"/>
+        </g>
+        <text class="sans" x="20" y="438" font-size="11" fill="#FFFFFF" fill-opacity="0.55">صورة</text>
       </g>
 
-      <g transform="translate(280,235)">
-        <path class="a" d="M0,0 a18,18 0 0 1 36,0 c0,12 -18,34 -18,34 S0,12 0,0 Z" filter="url(#glow3)"/>
-        <circle cx="18" cy="0" r="5.2" fill="var(--accent)"/>
-        <rect class="tag" x="44" y="-18" width="136" height="34" rx="10"/>
-        <text class="p" x="56" y="5">الدار البيضاء</text>
+      <!-- Map panel -->
+      <rect x="300" y="60" width="760" height="560" rx="16" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.12"/>
+
+      <!-- Map + lines (clipped to panel) -->
+      <g clip-path="url(#mapPanelClip3)">
+        <!-- faint glow wash -->
+        <rect x="300" y="60" width="760" height="560" fill="#FF2A2A" fill-opacity="0.02"/>
+        <!-- Morocco map (external asset) -->
+        <g opacity="0.6">
+          <image
+            id="morocco-map"
+            href="morocco.svg"
+            x="112"
+            y="195"
+            width="950"
+            height="850"
+            preserveAspectRatio="xMidYMid meet"
+          />
+        </g>
+
+        <!-- network curves -->
+        <g stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="2" fill="none">
+          <path d="M420 260 C520 220, 600 240, 700 210 C810 176, 890 200, 980 250"/>
+          <path d="M410 360 C520 330, 610 340, 720 320 C830 300, 920 320, 1010 370"/>
+          <path d="M430 460 C540 430, 650 450, 760 430 C860 410, 940 420, 1030 470"/>
+        </g>
       </g>
 
-      <g transform="translate(360,330)">
-        <path class="a" d="M0,0 a18,18 0 0 1 36,0 c0,12 -18,34 -18,34 S0,12 0,0 Z" filter="url(#glow3)"/>
-        <circle cx="18" cy="0" r="5.2" fill="var(--accent)"/>
-        <rect class="tag" x="44" y="-18" width="134" height="34" rx="10"/>
-        <text class="p" x="56" y="5">مراكش</text>
-      </g>
-
-      <path class="s" d="M318,204 C210,168 166,150 120,132" opacity="0.7"/>
-      <path class="s" d="M298,262 C188,260 160,274 120,300" opacity="0.7"/>
-      <path class="s" d="M378,356 C250,410 190,450 120,468" opacity="0.7"/>
-    </g>
-
-    <g transform="translate(28,70)">
+      <!-- Pins + labels -->
       <g>
-        <rect class="card" x="0" y="0" rx="18" width="170" height="120"/>
-        <path class="a" d="M34,40 a18,18 0 0 1 18,-18 h70 a18,18 0 0 1 18,18 v30 a18,18 0 0 1 -18,18 h-28 l-22,16 v-16 h-20 a18,18 0 0 1 -18,-18z" filter="url(#glow3)"/>
-        <text class="p" x="34" y="106">دردشة</text>
+        <!-- Rabat -->
+        <g transform="translate(610 300)">
+          <g filter="url(#glowRed3)">
+            <path d="M0 0c0-14 11-26 26-26s26 12 26 26c0 18-26 46-26 46S0 18 0 0Z"
+                  fill="#FF2A2A" fill-opacity="0.10" stroke="#FF2A2A" stroke-width="2.4"/>
+            <circle cx="26" cy="0" r="8" fill="#FF2A2A"/>
+          </g>
+          <rect x="62" y="-16" width="120" height="32" rx="10" fill="#000000" fill-opacity="0.35"/>
+          <text class="sans" x="76" y="6" font-size="12" font-weight="700" fill="#FFFFFF" fill-opacity="0.85">الرباط</text>
+        </g>
+
+        <!-- Casablanca -->
+        <g transform="translate(560 350)">
+          <g filter="url(#glowRed3)">
+            <path d="M0 0c0-14 11-26 26-26s26 12 26 26c0 18-26 46-26 46S0 18 0 0Z"
+                  fill="#FF2A2A" fill-opacity="0.10" stroke="#FF2A2A" stroke-width="2.4"/>
+            <circle cx="26" cy="0" r="8" fill="#FF2A2A"/>
+          </g>
+          <rect x="62" y="-16" width="140" height="32" rx="10" fill="#000000" fill-opacity="0.35"/>
+          <text class="sans" x="76" y="6" font-size="12" font-weight="700" fill="#FFFFFF" fill-opacity="0.85">الدار البيضاء</text>
+        </g>
+
+        <!-- Marrakesh -->
+        <g transform="translate(690 450)">
+          <g filter="url(#glowRed3)">
+            <path d="M0 0c0-14 11-26 26-26s26 12 26 26c0 18-26 46-26 46S0 18 0 0Z"
+                  fill="#FF2A2A" fill-opacity="0.10" stroke="#FF2A2A" stroke-width="2.4"/>
+            <circle cx="26" cy="0" r="8" fill="#FF2A2A"/>
+          </g>
+          <rect x="62" y="-16" width="150" height="32" rx="10" fill="#000000" fill-opacity="0.35"/>
+          <text class="sans" x="76" y="6" font-size="12" font-weight="700" fill="#FFFFFF" fill-opacity="0.85">مراكش</text>
+        </g>
       </g>
 
-      <g transform="translate(0,160)">
-        <rect class="card" x="0" y="0" rx="18" width="170" height="120"/>
-        <path class="a" d="M44,32 h82 a18,18 0 0 1 18,18 v26 a18,18 0 0 1 -18,18 h-82 a18,18 0 0 1 -18,-18 v-26 a18,18 0 0 1 18,-18z" filter="url(#glow3)"/>
-        <path class="a" d="M84,44 L112,62 L84,80 Z" filter="url(#glow3)"/>
-        <text class="p" x="34" y="106">فيديو قصير</text>
-      </g>
-
-      <g transform="translate(0,320)">
-        <rect class="card" x="0" y="0" rx="18" width="170" height="120"/>
-        <rect class="a" x="44" y="34" width="82" height="56" rx="14" filter="url(#glow3)"/>
-        <circle class="a" cx="85" cy="62" r="13" filter="url(#glow3)"/>
-        <path class="a" d="M58,34 l10,-12 h34 l10,12" filter="url(#glow3)"/>
-        <text class="p" x="34" y="106">صورة</text>
+      <!-- Quote callout -->
+      <g transform="translate(610 520)">
+        <rect x="0" y="0" width="430" height="90" rx="16" fill="#FFFFFF" fill-opacity="0.03" stroke="#FFFFFF" stroke-opacity="0.12"/>
+        <g filter="url(#glowRed3)">
+          <path d="M16 22h396" stroke="#FF2A2A" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <text class="sans" x="24" y="54" font-size="14" font-weight="700" fill="#FFFFFF" fill-opacity="0.85">"الملاعب موجودة..."</text>
+        <text class="sans" x="24" y="76" font-size="14" font-weight="700" fill="#FFFFFF" fill-opacity="0.85">"فأين المستشفيات؟"</text>
       </g>
     </g>
-  </g>
 
-  <g transform="translate(690,560)">
-    <rect class="card" x="0" y="0" rx="20" width="430" height="140"/>
-    <path class="a" d="M34,38 h48 l12,-16 h146 l12,16 h160" opacity="0.9" filter="url(#glow3)"/>
-    <text class="h" x="34" y="78">"الملاعب موجودة..."</text>
-    <text class="h" x="34" y="108">"فأين المستشفيات؟"</text>
+    <text class="mono" x="1116" y="732" font-size="12" fill="#FFFFFF" fill-opacity="0.50">FIG.03</text>
   </g>
 </svg>

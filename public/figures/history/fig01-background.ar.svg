@@ -1,171 +1,136 @@
-<svg lang="ar" xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="t d">
-  <title id="t">إنفوجرافيك لقطة الخلفية</title>
-  <desc id="d">أربع بطاقات تلخص بطالة الشباب، والسكان دون 35 سنة، والنمو، وكثافة الأطباء.</desc>
-
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ff2b2b" stop-opacity="0.14"/>
-      <stop offset="55%" stop-color="#000" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#ff2b2b" stop-opacity="0.05"/>
+    <linearGradient id="bgGrad1" x1="40" y1="40" x2="1160" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3A141C" stop-opacity="0.35"/>
+      <stop offset="0.55" stop-color="#1B2028" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#0F141B" stop-opacity="0.30"/>
     </linearGradient>
 
-    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.07"/>
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.03"/>
-    </linearGradient>
+    <radialGradient id="softVignette1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(520 320) rotate(60) scale(900 700)">
+      <stop stop-color="#FFFFFF" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.18"/>
+    </radialGradient>
 
-    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity="0.35"/>
-    </filter>
-
-    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+    <filter id="glowRed" x="-40%" y="-40%" width="180%" height="180%">
       <feGaussianBlur stdDeviation="6" result="b"/>
       <feMerge>
         <feMergeNode in="b"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
+
+    <clipPath id="frameClip1">
+      <rect x="40" y="40" width="1120" height="720" rx="18"/>
+    </clipPath>
+
+    <style>
+      .sans { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Noto Sans Arabic", "Noto Naskh Arabic", "Noto Sans", sans-serif; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    </style>
   </defs>
+  <g clip-path="url(#frameClip1)">
+    <rect x="40" y="40" width="1120" height="720" rx="18" fill="url(#bgGrad1)"/>
+    <rect x="40" y="40" width="1120" height="720" rx="18" fill="url(#softVignette1)"/>
+    <rect x="40" y="40" width="1120" height="720" rx="18" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="1.2"/>
 
-  <style>
-    :root{
-      --accent: var(--neon-red, #ff2b2b);
-      --text: var(--fig-text, rgba(255,255,255,0.92));
-      --muted: var(--fig-muted, rgba(255,255,255,0.68));
-      --stroke: var(--fig-stroke, rgba(255,255,255,0.40));
-      --border: var(--fig-border, rgba(255,255,255,0.16));
-      --surface: var(--fig-surface, rgba(255,255,255,0.05));
-    }
-    .frame{ fill: rgba(0,0,0,0.18); stroke: var(--border); stroke-width: 2; }
-    .card{ fill: url(#cardGrad); stroke: var(--border); stroke-width: 2; }
-    .topline{ stroke: var(--accent); stroke-width: 3; opacity: .55; }
-    .s{ stroke: var(--stroke); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .a{ stroke: var(--accent); stroke-width: 3.4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .num{ font: 800 54px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; fill: var(--text); }
-    .lbl{ font: 700 15px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; letter-spacing: .14em; fill: var(--muted); }
-    .cap{ font: 550 15px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: rgba(255,255,255,0.74); }
-    .mini{ font: 650 13px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; fill: rgba(255,255,255,0.62); }
-  </style>
+    <g transform="translate(90 70)">
+      <!-- Cards grid -->
+      <rect x="0" y="0" width="510" height="260" rx="14" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14"/>
+      <rect x="550" y="0" width="510" height="260" rx="14" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14"/>
+      <rect x="0" y="290" width="510" height="260" rx="14" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14"/>
+      <rect x="550" y="290" width="510" height="260" rx="14" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14"/>
 
-  <rect x="40" y="40" width="1120" height="720" rx="26" class="frame" filter="url(#softShadow)"/>
-  <rect x="40" y="40" width="1120" height="720" rx="26" fill="url(#bgGrad)"/>
+      <!-- Bottom strip -->
+      <rect x="0" y="580" width="1060" height="110" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.12"/>
+      <rect x="0" y="580" width="1060" height="110" rx="14" fill="#FF2A2A" fill-opacity="0.03"/>
 
-  <g transform="translate(90,100)">
-    <rect class="card" x="0"   y="0"   rx="18" width="510" height="280"/>
-    <rect class="card" x="550" y="0"   rx="18" width="510" height="280"/>
-    <rect class="card" x="0"   y="320" rx="18" width="510" height="280"/>
-    <rect class="card" x="550" y="320" rx="18" width="510" height="280"/>
+      <!-- Card 1 -->
+      <g transform="translate(0 0)">
+        <rect x="24" y="24" width="70" height="3" rx="2" fill="#FF2A2A"/>
+        <text class="sans" x="24" y="54" font-size="12" font-weight="700" letter-spacing="1.6" fill="#FFFFFF" fill-opacity="0.72">بطالة الشباب</text>
+        <text class="sans" x="24" y="122" font-size="44" font-weight="800" fill="#FFFFFF" fill-opacity="0.92">35.8%</text>
+        <text class="sans" x="24" y="160" font-size="12" font-weight="600" fill="#FFFFFF" fill-opacity="0.62">ضغط على فرص الشباب</text>
+        <text class="sans" x="24" y="184" font-size="11" fill="#FFFFFF" fill-opacity="0.45">مؤشر سياقي</text>
 
-    <path class="topline" d="M22,22 h120"/>
-    <path class="topline" d="M572,22 h120"/>
-    <path class="topline" d="M22,342 h120"/>
-    <path class="topline" d="M572,342 h120"/>
-
-    <g transform="translate(40,44)">
-      <text class="lbl" x="0" y="0">بطالة الشباب</text>
-      <text class="num" x="0" y="86">35.8%</text>
-      <text class="cap" x="0" y="124">ضغط على فرص الشباب</text>
-      <text class="mini" x="0" y="152">مؤشر سياقي</text>
-
-      <g transform="translate(372,24)">
-        <circle class="s" cx="40" cy="28" r="18"/>
-        <path class="s" d="M12,108 C18,78 62,78 68,108"/>
-        <path class="s" d="M26,58 C30,74 50,74 54,58"/>
-        <path class="a" d="M110,18 L136,66 L84,66 Z" filter="url(#softGlow)"/>
-        <path class="a" d="M110,36 v12"/>
-        <circle cx="110" cy="56" r="3.2" fill="var(--accent)"/>
-      </g>
-    </g>
-
-    <g transform="translate(590,44)">
-      <text class="lbl" x="0" y="0">السكان دون 35</text>
-      <text class="num" x="0" y="86">50%+</text>
-      <text class="cap" x="0" y="124">منحنى ديمغرافي يغلب عليه الشباب</text>
-      <text class="mini" x="0" y="152">مؤشر سياقي</text>
-
-      <g transform="translate(372,18)">
-        <circle class="s" cx="28" cy="38" r="14"/>
-        <circle class="s" cx="70" cy="30" r="18"/>
-        <circle class="s" cx="112" cy="38" r="14"/>
-        <path class="s" d="M8,112 C14,88 42,88 48,112"/>
-        <path class="s" d="M40,126 C48,88 92,88 100,126"/>
-        <path class="s" d="M92,112 C98,88 126,88 132,112"/>
-        <path class="a" d="M70,10 v-10"/>
-        <path class="a" d="M56,6 h28"/>
-      </g>
-    </g>
-
-    <g transform="translate(40,364)">
-      <text class="lbl" x="0" y="0">النمو الاقتصادي</text>
-      <text class="num" x="0" y="86">~3%</text>
-      <text class="cap" x="0" y="124">أقل من هدف 6% للتحسن الواسع</text>
-      <text class="mini" x="0" y="152">إشارة كلية</text>
-
-      <g transform="translate(322,26)">
-        <path class="s" d="M8,176 H174"/>
-        <path class="s" d="M20,176 V30"/>
-        <path class="s" d="M30,150 L68,112 L104,124 L146,70"/>
-        <path class="a" d="M30,150 L68,112 L104,124 L146,70" filter="url(#softGlow)"/>
-        <circle cx="146" cy="70" r="6" fill="var(--accent)"/>
-        <path class="s" d="M186,52 v124"/>
-        <path class="s" d="M186,52 h90"/>
-        <text class="cap" x="196" y="80">الهدف 6%</text>
-        <path class="a" d="M186,92 h72"/>
-        <text class="cap" x="196" y="132">الحالي ~3%</text>
-      </g>
-    </g>
-
-    <g transform="translate(590,364)">
-      <text class="lbl" x="0" y="0">أطباء لكل 10 آلاف</text>
-      <text class="num" x="0" y="86">7.7</text>
-      <text class="cap" x="0" y="124">أقل من معيار 25 لكل 10 آلاف</text>
-      <text class="mini" x="0" y="152">القدرة الصحية</text>
-
-      <g transform="translate(344,20)">
-        <rect class="s" x="22" y="44" width="78" height="78" rx="16"/>
-        <path class="a" d="M61,60 v46" filter="url(#softGlow)"/>
-        <path class="a" d="M38,83 h46" filter="url(#softGlow)"/>
-
-        <path class="s" d="M134,138 A64,64 0 0 1 262,138"/>
-        <path class="a" d="M198,138 L232,90" filter="url(#softGlow)"/>
-        <circle cx="232" cy="90" r="4.8" fill="var(--accent)"/>
-        <text class="cap" x="146" y="165">7.7</text>
-        <text class="cap" x="240" y="165">25</text>
-      </g>
-    </g>
-
-    <g transform="translate(0,640)">
-      <rect class="card" x="0" y="0" rx="18" width="1060" height="120"/>
-      <path class="topline" d="M22,22 h150"/>
-      <g transform="translate(40,38)">
-        <text class="lbl" x="0" y="0">إشارة الإنفاق</text>
-        <text class="cap" x="0" y="34">الملاعب ↑  /  المستشفيات ↓</text>
-      </g>
-
-      <g transform="translate(760,16)">
-        <path class="s" d="M70,10 v92"/>
-        <path class="s" d="M18,40 h104"/>
-        <path class="s" d="M18,40 L2,72"/>
-        <path class="s" d="M122,40 L138,72"/>
-
-        <path class="a" d="M2,72 h34" filter="url(#softGlow)"/>
-        <path class="s" d="M2,72 a17,17 0 0 0 34,0"/>
-        <path class="a" d="M104,72 h34" filter="url(#softGlow)"/>
-        <path class="s" d="M104,72 a17,17 0 0 0 34,0"/>
-
-        <g transform="translate(-44,12)">
-          <path class="s" d="M0,74 C18,44 58,44 76,74"/>
-          <path class="s" d="M12,74 v30 h52 v-30"/>
-          <path class="a" d="M22,68 h44"/>
+        <g transform="translate(360 78)">
+          <circle cx="40" cy="20" r="12" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="2"/>
+          <path d="M20 70c5-18 35-18 40 0" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="2" stroke-linecap="round"/>
+          <g filter="url(#glowRed)" transform="translate(92 2)">
+            <path d="M22 6 L44 44 H0 Z" fill="#FF2A2A" fill-opacity="0.10" stroke="#FF2A2A" stroke-width="2.2" stroke-linejoin="round"/>
+            <path d="M22 18v12" stroke="#FF2A2A" stroke-width="2.2" stroke-linecap="round"/>
+            <circle cx="22" cy="36" r="1.8" fill="#FF2A2A"/>
+          </g>
         </g>
+      </g>
 
-        <g transform="translate(162,12)">
-          <path class="s" d="M0,50 h68 v56 h-68z"/>
-          <path class="s" d="M26,50 v-18 h16 v18"/>
-          <path class="a" d="M34,64 v22" filter="url(#softGlow)"/>
-          <path class="a" d="M23,75 h22" filter="url(#softGlow)"/>
+      <!-- Card 2 -->
+      <g transform="translate(550 0)">
+        <rect x="24" y="24" width="70" height="3" rx="2" fill="#FF2A2A"/>
+        <text class="sans" x="24" y="54" font-size="12" font-weight="700" letter-spacing="1.6" fill="#FFFFFF" fill-opacity="0.72">السكان دون 35</text>
+        <text class="sans" x="24" y="122" font-size="44" font-weight="800" fill="#FFFFFF" fill-opacity="0.92">50%+</text>
+        <text class="sans" x="24" y="160" font-size="12" font-weight="600" fill="#FFFFFF" fill-opacity="0.62">منحنى ديمغرافي يغلب عليه الشباب</text>
+        <text class="sans" x="24" y="184" font-size="11" fill="#FFFFFF" fill-opacity="0.45">مؤشر سياقي</text>
+
+        <g transform="translate(352 80)">
+          <circle cx="40" cy="20" r="11" stroke="#FFFFFF" stroke-opacity="0.32" stroke-width="2"/>
+          <circle cx="88" cy="24" r="9" stroke="#FFFFFF" stroke-opacity="0.28" stroke-width="2"/>
+          <circle cx="112" cy="36" r="7" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="2"/>
+          <path d="M18 70c6-18 38-18 44 0" stroke="#FFFFFF" stroke-opacity="0.30" stroke-width="2" stroke-linecap="round"/>
+          <path d="M70 70c4-14 30-14 34 0" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="2" stroke-linecap="round"/>
+          <g filter="url(#glowRed)" transform="translate(126 2)">
+            <path d="M0 10h18" stroke="#FF2A2A" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M9 1v18" stroke="#FF2A2A" stroke-width="2.4" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- Card 3 -->
+      <g transform="translate(0 290)">
+        <rect x="24" y="24" width="70" height="3" rx="2" fill="#FF2A2A"/>
+        <text class="sans" x="24" y="54" font-size="12" font-weight="700" letter-spacing="1.6" fill="#FFFFFF" fill-opacity="0.72">النمو الاقتصادي</text>
+        <text class="sans" x="24" y="122" font-size="44" font-weight="800" fill="#FFFFFF" fill-opacity="0.92">~3%</text>
+        <text class="sans" x="24" y="160" font-size="12" font-weight="600" fill="#FFFFFF" fill-opacity="0.62">أقل من هدف 6% للتحسن الواسع</text>
+        <text class="sans" x="24" y="184" font-size="11" fill="#FFFFFF" fill-opacity="0.45">إشارة كلية</text>
+
+        <g transform="translate(300 78)">
+          <path d="M0 140H190" stroke="#FFFFFF" stroke-opacity="0.20" stroke-width="2" stroke-linecap="round"/>
+          <path d="M18 152V20" stroke="#FFFFFF" stroke-opacity="0.20" stroke-width="2" stroke-linecap="round"/>
+          <g filter="url(#glowRed)">
+            <path d="M20 126 L70 98 L115 112 L160 62 L190 44" fill="none" stroke="#FF2A2A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="190" cy="44" r="4.5" fill="#FF2A2A"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- Card 4 -->
+      <g transform="translate(550 290)">
+        <rect x="24" y="24" width="70" height="3" rx="2" fill="#FF2A2A"/>
+        <text class="sans" x="24" y="54" font-size="12" font-weight="700" letter-spacing="1.6" fill="#FFFFFF" fill-opacity="0.72">أطباء لكل 10 آلاف</text>
+        <text class="sans" x="24" y="122" font-size="44" font-weight="800" fill="#FFFFFF" fill-opacity="0.92">7.7</text>
+        <text class="sans" x="24" y="160" font-size="12" font-weight="600" fill="#FFFFFF" fill-opacity="0.62">أقل من معيار 25 لكل 10 آلاف</text>
+        <text class="sans" x="24" y="184" font-size="11" fill="#FFFFFF" fill-opacity="0.45">القدرة الصحية</text>
+
+        <g transform="translate(360 82)">
+          <rect x="0" y="0" width="120" height="120" rx="14" fill="#FFFFFF" fill-opacity="0.03" stroke="#FFFFFF" stroke-opacity="0.12"/>
+          <g filter="url(#glowRed)" transform="translate(36 34)">
+            <path d="M24 0v52" stroke="#FF2A2A" stroke-width="3.2" stroke-linecap="round"/>
+            <path d="M-2 26h52" stroke="#FF2A2A" stroke-width="3.2" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- Bottom strip content -->
+      <g transform="translate(0 580)">
+        <text class="sans" x="24" y="42" font-size="12" font-weight="700" letter-spacing="1.6" fill="#FFFFFF" fill-opacity="0.70">إشارة الإنفاق</text>
+        <text class="sans" x="24" y="72" font-size="12" fill="#FFFFFF" fill-opacity="0.62">مليارات تخصص للفعاليات الكبرى بينما تتدهور الخدمات العامة</text>
+        <g filter="url(#glowRed)" transform="translate(720 58)">
+          <rect x="0" y="0" width="300" height="8" rx="4" fill="#FF2A2A" fill-opacity="0.20"/>
+          <rect x="0" y="0" width="210" height="8" rx="4" fill="#FF2A2A"/>
         </g>
       </g>
     </g>
+
+    <text class="mono" x="1116" y="732" font-size="12" fill="#FFFFFF" fill-opacity="0.50">FIG.01</text>
   </g>
 </svg>

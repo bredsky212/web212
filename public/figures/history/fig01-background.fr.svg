@@ -1,0 +1,136 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad1" x1="40" y1="40" x2="1160" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3A141C" stop-opacity="0.35"/>
+      <stop offset="0.55" stop-color="#1B2028" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#0F141B" stop-opacity="0.30"/>
+    </linearGradient>
+
+    <radialGradient id="softVignette1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(520 320) rotate(60) scale(900 700)">
+      <stop stop-color="#FFFFFF" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.18"/>
+    </radialGradient>
+
+    <filter id="glowRed" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <clipPath id="frameClip1">
+      <rect x="40" y="40" width="1120" height="720" rx="18"/>
+    </clipPath>
+
+    <style>
+      .sans { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Noto Sans", sans-serif; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    </style>
+  </defs>
+  <g clip-path="url(#frameClip1)">
+    <rect x="40" y="40" width="1120" height="720" rx="18" fill="url(#bgGrad1)"/>
+    <rect x="40" y="40" width="1120" height="720" rx="18" fill="url(#softVignette1)"/>
+    <rect x="40" y="40" width="1120" height="720" rx="18" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="1.2"/>
+
+    <g transform="translate(90 70)">
+      <!-- Cards grid -->
+      <rect x="0" y="0" width="510" height="260" rx="14" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14"/>
+      <rect x="550" y="0" width="510" height="260" rx="14" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14"/>
+      <rect x="0" y="290" width="510" height="260" rx="14" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14"/>
+      <rect x="550" y="290" width="510" height="260" rx="14" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14"/>
+
+      <!-- Bottom strip -->
+      <rect x="0" y="580" width="1060" height="110" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.12"/>
+      <rect x="0" y="580" width="1060" height="110" rx="14" fill="#FF2A2A" fill-opacity="0.03"/>
+
+      <!-- Card 1 -->
+      <g transform="translate(0 0)">
+        <rect x="24" y="24" width="70" height="3" rx="2" fill="#FF2A2A"/>
+        <text class="sans" x="24" y="54" font-size="12" font-weight="700" letter-spacing="1.6" fill="#FFFFFF" fill-opacity="0.72">CHOMAGE DES JEUNES</text>
+        <text class="sans" x="24" y="122" font-size="44" font-weight="800" fill="#FFFFFF" fill-opacity="0.92">35.8%</text>
+        <text class="sans" x="24" y="160" font-size="12" font-weight="600" fill="#FFFFFF" fill-opacity="0.62">Pression sur les opportunites des jeunes</text>
+        <text class="sans" x="24" y="184" font-size="11" fill="#FFFFFF" fill-opacity="0.45">Indicateur de contexte</text>
+
+        <g transform="translate(360 78)">
+          <circle cx="40" cy="20" r="12" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="2"/>
+          <path d="M20 70c5-18 35-18 40 0" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="2" stroke-linecap="round"/>
+          <g filter="url(#glowRed)" transform="translate(92 2)">
+            <path d="M22 6 L44 44 H0 Z" fill="#FF2A2A" fill-opacity="0.10" stroke="#FF2A2A" stroke-width="2.2" stroke-linejoin="round"/>
+            <path d="M22 18v12" stroke="#FF2A2A" stroke-width="2.2" stroke-linecap="round"/>
+            <circle cx="22" cy="36" r="1.8" fill="#FF2A2A"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- Card 2 -->
+      <g transform="translate(550 0)">
+        <rect x="24" y="24" width="70" height="3" rx="2" fill="#FF2A2A"/>
+        <text class="sans" x="24" y="54" font-size="12" font-weight="700" letter-spacing="1.6" fill="#FFFFFF" fill-opacity="0.72">POPULATION DE MOINS DE 35 ANS</text>
+        <text class="sans" x="24" y="122" font-size="44" font-weight="800" fill="#FFFFFF" fill-opacity="0.92">50%+</text>
+        <text class="sans" x="24" y="160" font-size="12" font-weight="600" fill="#FFFFFF" fill-opacity="0.62">Une demographie fortement jeune</text>
+        <text class="sans" x="24" y="184" font-size="11" fill="#FFFFFF" fill-opacity="0.45">Indicateur de contexte</text>
+
+        <g transform="translate(352 80)">
+          <circle cx="40" cy="20" r="11" stroke="#FFFFFF" stroke-opacity="0.32" stroke-width="2"/>
+          <circle cx="88" cy="24" r="9" stroke="#FFFFFF" stroke-opacity="0.28" stroke-width="2"/>
+          <circle cx="112" cy="36" r="7" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="2"/>
+          <path d="M18 70c6-18 38-18 44 0" stroke="#FFFFFF" stroke-opacity="0.30" stroke-width="2" stroke-linecap="round"/>
+          <path d="M70 70c4-14 30-14 34 0" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="2" stroke-linecap="round"/>
+          <g filter="url(#glowRed)" transform="translate(126 2)">
+            <path d="M0 10h18" stroke="#FF2A2A" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M9 1v18" stroke="#FF2A2A" stroke-width="2.4" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- Card 3 -->
+      <g transform="translate(0 290)">
+        <rect x="24" y="24" width="70" height="3" rx="2" fill="#FF2A2A"/>
+        <text class="sans" x="24" y="54" font-size="12" font-weight="700" letter-spacing="1.6" fill="#FFFFFF" fill-opacity="0.72">CROISSANCE ECONOMIQUE</text>
+        <text class="sans" x="24" y="122" font-size="44" font-weight="800" fill="#FFFFFF" fill-opacity="0.92">~3%</text>
+        <text class="sans" x="24" y="160" font-size="12" font-weight="600" fill="#FFFFFF" fill-opacity="0.62">En dessous de la cible de 6% pour un progres global</text>
+        <text class="sans" x="24" y="184" font-size="11" fill="#FFFFFF" fill-opacity="0.45">Signal macro</text>
+
+        <g transform="translate(300 78)">
+          <path d="M0 140H190" stroke="#FFFFFF" stroke-opacity="0.20" stroke-width="2" stroke-linecap="round"/>
+          <path d="M18 152V20" stroke="#FFFFFF" stroke-opacity="0.20" stroke-width="2" stroke-linecap="round"/>
+          <g filter="url(#glowRed)">
+            <path d="M20 126 L70 98 L115 112 L160 62 L190 44" fill="none" stroke="#FF2A2A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="190" cy="44" r="4.5" fill="#FF2A2A"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- Card 4 -->
+      <g transform="translate(550 290)">
+        <rect x="24" y="24" width="70" height="3" rx="2" fill="#FF2A2A"/>
+        <text class="sans" x="24" y="54" font-size="12" font-weight="700" letter-spacing="1.6" fill="#FFFFFF" fill-opacity="0.72">MEDECINS POUR 10K</text>
+        <text class="sans" x="24" y="122" font-size="44" font-weight="800" fill="#FFFFFF" fill-opacity="0.92">7.7</text>
+        <text class="sans" x="24" y="160" font-size="12" font-weight="600" fill="#FFFFFF" fill-opacity="0.62">En dessous du repere 25/10k</text>
+        <text class="sans" x="24" y="184" font-size="11" fill="#FFFFFF" fill-opacity="0.45">Capacite sanitaire</text>
+
+        <g transform="translate(360 82)">
+          <rect x="0" y="0" width="120" height="120" rx="14" fill="#FFFFFF" fill-opacity="0.03" stroke="#FFFFFF" stroke-opacity="0.12"/>
+          <g filter="url(#glowRed)" transform="translate(36 34)">
+            <path d="M24 0v52" stroke="#FF2A2A" stroke-width="3.2" stroke-linecap="round"/>
+            <path d="M-2 26h52" stroke="#FF2A2A" stroke-width="3.2" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- Bottom strip content -->
+      <g transform="translate(0 580)">
+        <text class="sans" x="24" y="42" font-size="12" font-weight="700" letter-spacing="1.6" fill="#FFFFFF" fill-opacity="0.70">SIGNAL DE DEPENSE</text>
+        <text class="sans" x="24" y="72" font-size="12" fill="#FFFFFF" fill-opacity="0.62">Des milliards alloues aux mega-evenements pendant que les services publics se degradent</text>
+        <g filter="url(#glowRed)" transform="translate(720 58)">
+          <rect x="0" y="0" width="300" height="8" rx="4" fill="#FF2A2A" fill-opacity="0.20"/>
+          <rect x="0" y="0" width="210" height="8" rx="4" fill="#FF2A2A"/>
+        </g>
+      </g>
+    </g>
+
+    <text class="mono" x="1116" y="732" font-size="12" fill="#FFFFFF" fill-opacity="0.50">FIG.01</text>
+  </g>
+</svg>

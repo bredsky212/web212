@@ -130,5 +130,19 @@
     "podcasts.item.9.title": "بودكاست جيل زد الحلقة 9",
     "podcasts.item.9.desc": "أزمة الصحة ومطالب الإصلاح",
     "podcasts.item.10.title": "بودكاست جيل زد الحلقة 10",
-    "podcasts.item.10.desc": "مستقبل الحركة"
+    "podcasts.item.10.desc": "مستقبل الحركة",
+    "blog.title.primary": "المدونة",
+    "blog.title.accent": " ",
+    "blog.subtitle": "تحديثات وتحليلات وأصوات من حركة جيل زد 212.",
+    "blog.searchPlaceholder": "ابحث عن المقالات...",
+    "blog.filter.all": "الكل",
+    "blog.featured": "مميز",
+    "blog.allPosts": "كل المقالات",
+    "blog.empty.title": "لا توجد مقالات بعد",
+    "blog.empty.subtitle": "ستظهر المقالات هنا بعد إضافتها عبر سترابي.",
+    "blog.empty.search": "لم يتم العثور على مقالات تطابق بحثك.",
+    "blog.backToBlog": "العودة إلى المدونة",
+    "blog.by": "بقلم",
+    "blog.postNotFound.title": "المقال غير موجود",
+    "blog.postNotFound.subtitle": "المقال الذي تبحث عنه غير موجود."
 }

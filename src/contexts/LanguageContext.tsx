@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { translations } from "@/i18n";
+import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, isSupportedLocale, type SupportedLocale } from "@/lib/i18n/locales";
 
 export const languages = [
     { code: "en", name: "English", dir: "ltr" },
@@ -32,28 +33,41 @@ interface LanguageContextType {
     setLang: (code: string) => void;
     t: (key: string) => string;
     dir: "ltr" | "rtl";
-    mounted: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-    const [lang, setLangState] = useState("en");
-    const [mounted, setMounted] = useState(false);
+    const [lang, setLangState] = useState<SupportedLocale>(DEFAULT_LOCALE);
 
     useEffect(() => {
-        setMounted(true);
+        const cookieMatch = document.cookie.match(
+            new RegExp(`(?:^|; )${LOCALE_COOKIE_NAME}=([^;]*)`)
+        );
+        const cookieLocale = cookieMatch ? decodeURIComponent(cookieMatch[1]) : null;
+
+        if (cookieLocale && translations[cookieLocale]) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setLangState(cookieLocale as SupportedLocale);
+            return;
+        }
+
         const stored = localStorage.getItem("genz212-lang");
         if (stored && translations[stored]) {
-            setLangState(stored);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setLangState(stored as SupportedLocale);
         }
     }, []);
 
     const currentLang = languages.find((l) => l.code === lang) || languages[0];
 
     const setLang = (code: string) => {
+        if (!isSupportedLocale(code)) {
+            return;
+        }
         setLangState(code);
         localStorage.setItem("genz212-lang", code);
+        document.cookie = `${LOCALE_COOKIE_NAME}=${encodeURIComponent(code)}; path=/; max-age=31536000; samesite=lax`;
     };
 
     const t = (key: string): string => {
@@ -61,7 +75,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <LanguageContext.Provider value={{ lang, setLang, t, dir: currentLang.dir as "ltr" | "rtl", mounted }}>
+        <LanguageContext.Provider value={{ lang, setLang, t, dir: currentLang.dir as "ltr" | "rtl" }}>
             {children}
         </LanguageContext.Provider>
     );

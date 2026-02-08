@@ -1,18 +1,73 @@
 "use client";
 
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
+import { useCallback, useEffect, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const sections = [
-    { id: "background", year: "Pre-2025" },
-    { id: "spark", year: "September 2025" },
-    { id: "movement", year: "27 September 2025" },
+    { id: "background", year: "Pre-2025", figure: "fig01-background" },
+    { id: "spark", year: "September 2025", figure: "fig02-spark" },
+    { id: "movement", year: "27 September 2025", figure: "fig03-movement" },
 ];
 
+type FigureLocale = "ar" | "en" | "fr";
+
+const sectionFigureAlt: Record<string, Record<FigureLocale, string>> = {
+    background: {
+        en: "Context snapshot infographic",
+        fr: "Infographie du contexte",
+        ar: "إنفوجرافيك لقطة الخلفية",
+    },
+    spark: {
+        en: "Spark timeline and growth infographic",
+        fr: "Infographie de la chronologie et de la croissance",
+        ar: "إنفوجرافيك الشرارة والخط الزمني والنمو",
+    },
+    movement: {
+        en: "Movement map and coordination channels infographic",
+        fr: "Infographie de la carte du mouvement et des canaux de coordination",
+        ar: "إنفوجرافيك خريطة الحركة وقنوات التنسيق",
+    },
+};
+
+const discordFigureAlt: Record<FigureLocale, string> = {
+    en: "Decentralized coordination and anonymity infographic",
+    fr: "Infographie de coordination decentralisee et anonymat",
+    ar: "إنفوجرافيك التنسيق اللامركزي وإخفاء الهوية",
+};
+
 export default function HistoryPage() {
-    const { t } = useLanguage();
+    const { t, lang } = useLanguage();
+    const { theme } = useTheme();
+    const movementObjectRef = useRef<HTMLObjectElement | null>(null);
+    const historyTitle = t("history.title");
+    const historyTitleParts = historyTitle.split(" & ");
+    const hasAccentTitle = historyTitleParts.length > 1;
+    const historyTitlePrimary = hasAccentTitle ? historyTitleParts[0] : historyTitle;
+    const historyTitleAccent = hasAccentTitle ? historyTitleParts.slice(1).join(" & ") : "";
+    const figureLocale: FigureLocale =
+        lang === "ar" || lang === "fr" || lang === "en" ? lang : "en";
+    const applyMovementMapTheme = useCallback(() => {
+        const mapImage = movementObjectRef.current?.contentDocument?.getElementById("morocco-map");
+        if (!mapImage) {
+            return;
+        }
+
+        if (theme === "dark") {
+            mapImage.setAttribute("style", "filter: invert(1);");
+            return;
+        }
+
+        mapImage.removeAttribute("style");
+    }, [theme]);
+
+    useEffect(() => {
+        applyMovementMapTheme();
+    }, [applyMovementMapTheme, figureLocale]);
 
     return (
         <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] selection:bg-neon-red selection:text-white">
@@ -25,8 +80,14 @@ export default function HistoryPage() {
                     transition={{ duration: 0.8 }}
                     className="text-center mb-24"
                 >
-                    <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-b from-[var(--foreground)] to-[var(--text-secondary)]">
-                        {t("history.title").split(" & ")[0]} & <span className="text-neon-red">{t("history.title").split(" & ")[1]}</span>
+                    <h1 className="text-3xl sm:text-4xl md:text-6xl font-display font-bold mb-6 text-[var(--text-primary)] leading-tight break-words">
+                        {historyTitlePrimary}
+                        {historyTitleAccent ? (
+                            <>
+                                {" "}
+                                <span className="text-neon-red">&amp; {historyTitleAccent}</span>
+                            </>
+                        ) : null}
                     </h1>
                     <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
                         {t("history.subtitle")}
@@ -42,29 +103,63 @@ export default function HistoryPage() {
                             viewport={{ once: true, margin: "-100px" }}
                             transition={{ duration: 0.8 }}
                             className={`flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                                } gap-12 items-center`}
+                                } gap-12 items-center w-full`}
                         >
-                            <div className="flex-1">
-                                <div className="border-l-2 border-neon-red pl-6 py-2">
-                                    <span className="text-neon-red font-display tracking-widest text-sm mb-2 block">
+                            <div className="flex-1 w-full min-w-0">
+                                <div className="border-s-2 border-neon-red ps-6 py-2">
+                                    <span
+                                        dir="ltr"
+                                        className="text-neon-red font-display tracking-widest text-sm mb-2 block w-fit"
+                                    >
                                         {section.year}
                                     </span>
-                                    <h2 className="text-3xl font-bold mb-4 font-display text-[var(--foreground)]">{t(`history.section.${section.id}.title`)}</h2>
-                                    <p className="text-[var(--text-secondary)] leading-relaxed text-lg">
+                                    <h2 className="text-2xl sm:text-3xl font-bold mb-4 font-display text-[var(--foreground)] break-words">
+                                        {t(`history.section.${section.id}.title`)}
+                                    </h2>
+                                    <p className="text-[var(--text-secondary)] leading-relaxed text-lg break-words">
                                         {t(`history.section.${section.id}.content`)}
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex-1 flex justify-center">
-                                <div className="w-full h-64 md:h-80 bg-[var(--surface)] border border-[var(--border)] rounded-lg relative overflow-hidden group">
-                                    <div className="absolute inset-0 bg-neon-red/5 group-hover:bg-neon-red/10 transition-colors duration-500" />
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <div className="w-24 h-1 bg-neon-red/50 blur-lg group-hover:w-48 transition-all duration-700" />
-                                    </div>
-                                    <div className="absolute font-mono text-xs text-[var(--text-secondary)] bottom-4 right-4">
+                            <div className="flex-1 w-full min-w-0 flex justify-center">
+                                <figure className="w-full overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface)]">
+                                    {section.id === "movement" ? (
+                                        <object
+                                            data={`/figures/history/${section.figure}.${figureLocale}.svg`}
+                                            type="image/svg+xml"
+                                            className="block w-full"
+                                            style={{ aspectRatio: "3 / 2" }}
+                                            ref={movementObjectRef}
+                                            onLoad={applyMovementMapTheme}
+                                            aria-label={
+                                                sectionFigureAlt[section.id]?.[figureLocale] ??
+                                                sectionFigureAlt[section.id]?.en ??
+                                                "History figure"
+                                            }
+                                        >
+                                            <Image
+                                                src={`/figures/history/${section.figure}.${figureLocale}.svg`}
+                                                alt={sectionFigureAlt[section.id]?.[figureLocale] ?? sectionFigureAlt[section.id]?.en ?? "History figure"}
+                                                width={1200}
+                                                height={800}
+                                                className="block h-auto w-full"
+                                                sizes="(min-width: 768px) 50vw, 100vw"
+                                            />
+                                        </object>
+                                    ) : (
+                                        <Image
+                                            src={`/figures/history/${section.figure}.${figureLocale}.svg`}
+                                            alt={sectionFigureAlt[section.id]?.[figureLocale] ?? sectionFigureAlt[section.id]?.en ?? "History figure"}
+                                            width={1200}
+                                            height={800}
+                                            className="block h-auto w-full"
+                                            sizes="(min-width: 768px) 50vw, 100vw"
+                                        />
+                                    )}
+                                    <figcaption className="border-t border-[var(--border)] bg-[var(--surface)]/60 px-3 py-2 text-end font-mono text-xs text-[var(--text-muted)]">
                                         FIG.0{index + 1}
-                                    </div>
-                                </div>
+                                    </figcaption>
+                                </figure>
                             </div>
                         </motion.section>
                     ))}
@@ -83,6 +178,19 @@ export default function HistoryPage() {
                     <p className="text-[var(--text-secondary)] text-sm italic">
                         {t("history.discord.footer")}
                     </p>
+                    <figure className="mt-8 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface)]">
+                        <Image
+                            src={`/figures/history/fig04-why-discord.${figureLocale}.svg`}
+                            alt={discordFigureAlt[figureLocale]}
+                            width={1200}
+                            height={800}
+                            className="block h-auto w-full"
+                            sizes="(min-width: 768px) 896px, 100vw"
+                        />
+                        <figcaption className="border-t border-[var(--border)] bg-[var(--surface)]/60 px-3 py-2 text-end font-mono text-xs text-[var(--text-muted)]">
+                            FIG.04
+                        </figcaption>
+                    </figure>
                 </motion.div>
 
             </div>

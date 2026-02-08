@@ -5,7 +5,7 @@ import { useLanguage, languages } from "@/contexts/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function LanguageSelector() {
-    const { lang, setLang, mounted } = useLanguage();
+    const { lang, setLang } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -20,12 +20,6 @@ export function LanguageSelector() {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-
-    if (!mounted) {
-        return (
-            <div className="px-3 py-2 w-16 h-9 rounded-lg border border-[var(--border)]" />
-        );
-    }
 
     return (
         <div ref={ref} className="relative">
@@ -54,7 +48,7 @@ export function LanguageSelector() {
                                     setLang(language.code);
                                     setIsOpen(false);
                                 }}
-                                className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${lang === language.code
+                                className={`w-full text-start px-4 py-2.5 text-sm transition-colors ${lang === language.code
                                         ? "bg-[var(--accent)] text-white"
                                         : "hover:bg-[var(--surface-light)]"
                                     }`}

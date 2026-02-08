@@ -21,6 +21,8 @@
   --text-secondary: #a0a0a0;
   --text-muted: #666666;
   --accent: #8b0000;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 }
 
 [data-theme="light"] {
@@ -42,6 +44,11 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.3s, color 0.3s;
+}
+
+:root[dir="rtl"] {
+  --font-sans: var(--font-arabic), ui-sans-serif, system-ui;
+  --font-display: var(--font-arabic), ui-sans-serif, system-ui;
 }
 
 ::-webkit-scrollbar {

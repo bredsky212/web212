@@ -1,0 +1,118 @@
+import type { Metadata } from "next";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import BlogPostClient from "@/app/blog/[slug]/BlogPostClient";
+import BlogPostNotFound from "@/app/blog/BlogPostNotFound";
+import { CMS_ENABLED } from "@/lib/strapi/client";
+import { getBlogPostBySlug, getBlogPostLocaleBySlug } from "@/lib/strapi/blog.server";
+import { getLegacyBlogPostBySlug } from "@/lib/strapi/legacy";
+import { DEFAULT_LOCALE, isSupportedLocale, type SupportedLocale } from "@/lib/i18n/locales";
+import { buildPageMetadata, DEFAULT_OG_IMAGE } from "@/lib/seo";
+import { notFound, redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
+
+type PageProps = {
+    params: { locale: string; slug: string } | Promise<{ locale: string; slug: string }>;
+};
+
+const buildBlogAlternates = (slug: string) => ({
+    languages: {
+        ar: `/ar/blog/${slug}`,
+        fr: `/fr/blog/${slug}`,
+        en: `/en/blog/${slug}`,
+    },
+});
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const resolvedParams = await Promise.resolve(params);
+    const rawLocale =
+        typeof resolvedParams.locale === "string"
+            ? resolvedParams.locale.toLowerCase()
+            : "";
+    const locale = isSupportedLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
+    const slug = resolvedParams.slug;
+    const canonicalPath = `/${locale}/blog/${slug}`;
+
+    const post = slug
+        ? CMS_ENABLED
+            ? await getBlogPostBySlug(slug, locale)
+            : await getLegacyBlogPostBySlug(slug)
+        : null;
+
+    const title = post?.title ?? "Blog Post";
+    const description =
+        post?.excerpt ??
+        "Read this Gen-Z 212 blog article covering movement updates, analysis, and community context.";
+    const baseMetadata = buildPageMetadata({
+        title,
+        description,
+        path: canonicalPath,
+        locale,
+        image: post?.coverImageUrl
+            ? {
+                url: post.coverImageUrl,
+                alt: post.title,
+            }
+            : DEFAULT_OG_IMAGE,
+    });
+
+    return {
+        ...baseMetadata,
+        alternates: {
+            canonical: canonicalPath,
+            ...buildBlogAlternates(slug),
+        },
+    };
+}
+
+export default async function BlogPostPage({ params }: PageProps) {
+    const resolvedParams = await Promise.resolve(params);
+    if (process.env.STRAPI_DEBUG === "1") {
+        console.info("[route] blog detail raw params", resolvedParams);
+    }
+    const rawLocale =
+        typeof resolvedParams.locale === "string"
+            ? resolvedParams.locale.toLowerCase()
+            : "";
+    if (!isSupportedLocale(rawLocale)) {
+        notFound();
+    }
+    const locale = rawLocale as SupportedLocale;
+    const slug = typeof resolvedParams.slug === "string" ? resolvedParams.slug : "";
+    if (!slug) {
+        notFound();
+    }
+    if (process.env.STRAPI_DEBUG === "1") {
+        console.info("[route] blog detail params", { locale, slug });
+    }
+
+    const post = CMS_ENABLED
+        ? await getBlogPostBySlug(slug, locale)
+        : await getLegacyBlogPostBySlug(slug);
+
+    if (!post && CMS_ENABLED) {
+        const redirectInfo = await getBlogPostLocaleBySlug(slug);
+        if (redirectInfo) {
+            redirect(`/${redirectInfo.locale}/blog/${redirectInfo.slug}`);
+        }
+    }
+
+    if (!post) {
+        return (
+            <main className="min-h-screen bg-background text-foreground">
+                <Navbar />
+                <BlogPostNotFound backHref={`/${locale}/blog`} />
+                <Footer />
+            </main>
+        );
+    }
+
+    return (
+        <main className="min-h-screen bg-background text-foreground selection:bg-neon-red selection:text-white">
+            <Navbar />
+            <BlogPostClient post={post} backHref={`/${locale}/blog`} />
+            <Footer />
+        </main>
+    );
+}

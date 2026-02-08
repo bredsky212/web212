@@ -4,7 +4,9 @@ import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
+import { useCallback, useEffect, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const sections = [
     { id: "background", year: "Pre-2025", figure: "fig01-background" },
@@ -40,6 +42,8 @@ const discordFigureAlt: Record<FigureLocale, string> = {
 
 export default function HistoryPage() {
     const { t, lang } = useLanguage();
+    const { theme } = useTheme();
+    const movementObjectRef = useRef<HTMLObjectElement | null>(null);
     const historyTitle = t("history.title");
     const historyTitleParts = historyTitle.split(" & ");
     const hasAccentTitle = historyTitleParts.length > 1;
@@ -47,6 +51,23 @@ export default function HistoryPage() {
     const historyTitleAccent = hasAccentTitle ? historyTitleParts.slice(1).join(" & ") : "";
     const figureLocale: FigureLocale =
         lang === "ar" || lang === "fr" || lang === "en" ? lang : "en";
+    const applyMovementMapTheme = useCallback(() => {
+        const mapImage = movementObjectRef.current?.contentDocument?.getElementById("morocco-map");
+        if (!mapImage) {
+            return;
+        }
+
+        if (theme === "dark") {
+            mapImage.setAttribute("style", "filter: invert(1);");
+            return;
+        }
+
+        mapImage.removeAttribute("style");
+    }, [theme]);
+
+    useEffect(() => {
+        applyMovementMapTheme();
+    }, [applyMovementMapTheme, figureLocale]);
 
     return (
         <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] selection:bg-neon-red selection:text-white">
@@ -108,6 +129,8 @@ export default function HistoryPage() {
                                             type="image/svg+xml"
                                             className="block w-full"
                                             style={{ aspectRatio: "3 / 2" }}
+                                            ref={movementObjectRef}
+                                            onLoad={applyMovementMapTheme}
                                             aria-label={
                                                 sectionFigureAlt[section.id]?.[figureLocale] ??
                                                 sectionFigureAlt[section.id]?.en ??

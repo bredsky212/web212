@@ -84,7 +84,7 @@
         <!-- faint glow wash -->
         <rect x="300" y="60" width="760" height="560" fill="#FF2A2A" fill-opacity="0.02"/>
         <!-- Morocco map (external asset) -->
-        <g opacity="0.22">
+        <g opacity="0.6">
           <image
             href="morocco.svg"
             x="520"

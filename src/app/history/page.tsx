@@ -102,14 +102,37 @@ export default function HistoryPage() {
                             </div>
                             <div className="flex-1 w-full min-w-0 flex justify-center">
                                 <figure className="w-full overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface)]">
-                                    <Image
-                                        src={`/figures/history/${section.figure}.${figureLocale}.svg`}
-                                        alt={sectionFigureAlt[section.id]?.[figureLocale] ?? sectionFigureAlt[section.id]?.en ?? "History figure"}
-                                        width={1200}
-                                        height={800}
-                                        className="block h-auto w-full"
-                                        sizes="(min-width: 768px) 50vw, 100vw"
-                                    />
+                                    {section.id === "movement" ? (
+                                        <object
+                                            data={`/figures/history/${section.figure}.${figureLocale}.svg`}
+                                            type="image/svg+xml"
+                                            className="block w-full"
+                                            style={{ aspectRatio: "3 / 2" }}
+                                            aria-label={
+                                                sectionFigureAlt[section.id]?.[figureLocale] ??
+                                                sectionFigureAlt[section.id]?.en ??
+                                                "History figure"
+                                            }
+                                        >
+                                            <Image
+                                                src={`/figures/history/${section.figure}.${figureLocale}.svg`}
+                                                alt={sectionFigureAlt[section.id]?.[figureLocale] ?? sectionFigureAlt[section.id]?.en ?? "History figure"}
+                                                width={1200}
+                                                height={800}
+                                                className="block h-auto w-full"
+                                                sizes="(min-width: 768px) 50vw, 100vw"
+                                            />
+                                        </object>
+                                    ) : (
+                                        <Image
+                                            src={`/figures/history/${section.figure}.${figureLocale}.svg`}
+                                            alt={sectionFigureAlt[section.id]?.[figureLocale] ?? sectionFigureAlt[section.id]?.en ?? "History figure"}
+                                            width={1200}
+                                            height={800}
+                                            className="block h-auto w-full"
+                                            sizes="(min-width: 768px) 50vw, 100vw"
+                                        />
+                                    )}
                                     <figcaption className="border-t border-[var(--border)] bg-[var(--surface)]/60 px-3 py-2 text-end font-mono text-xs text-[var(--text-muted)]">
                                         FIG.0{index + 1}
                                     </figcaption>

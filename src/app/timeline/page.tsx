@@ -190,20 +190,14 @@ export default function TimelinePage() {
                   </div>
 
                   <div className="hidden md:flex w-2/12 justify-center">
-                    <div className="w-12 h-12 rounded-full bg-[var(--card-background)] border-2 border-neon-red flex items-center justify-center z-10 relative">
-                      <span className="text-neon-red text-lg font-bold">{event.icon}</span>
+                    <div className="w-24 h-24 rounded-full bg-[var(--background)] border-2 border-neon-red flex items-center justify-center z-10 relative shadow-[0_0_20px_rgba(139,0,0,0.3)] px-2">
+                      <span className="text-neon-red font-display font-bold text-[11px] leading-tight text-center">
+                        {pickText(event.dateLabel, lang)}
+                      </span>
                     </div>
                   </div>
 
-                  <div className="hidden md:flex w-full md:w-5/12 justify-center md:justify-start mt-4 md:mt-0">
-                    <div
-                      className={`text-sm font-display text-neon-red px-4 py-2 rounded-lg bg-[var(--card-background)] border border-neon-red/30 ${
-                        index % 2 === 0 ? "md:ml-auto" : "md:mr-auto"
-                      }`}
-                    >
-                      {pickText(event.dateLabel, lang)}
-                    </div>
-                  </div>
+                  <div className="hidden md:block w-full md:w-5/12" />
                 </motion.div>
               ))}
             </div>

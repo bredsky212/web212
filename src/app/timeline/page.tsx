@@ -99,7 +99,7 @@ export default function TimelinePage() {
                   }`}
                 >
                   <div className={`w-full md:w-5/12 ${index % 2 === 0 ? "md:text-right" : "md:text-left"}`}>
-                    <div className="glass-card p-6 pt-14 md:pt-6 rounded-xl relative group">
+                    <div className="relative bg-[var(--surface)] border border-neon-red/50 rounded-lg p-6 pt-14 md:pt-6 hover:border-neon-red transition-colors duration-300 group">
                       <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 md:hidden">
                         <div className="w-20 h-20 rounded-full bg-[var(--background)] border-2 border-neon-red flex items-center justify-center z-20 shadow-[0_0_20px_rgba(139,0,0,0.3)] px-2">
                           <span className="text-neon-red font-display font-bold text-[10px] leading-tight text-center">
@@ -108,16 +108,12 @@ export default function TimelinePage() {
                         </div>
                       </div>
 
-                      <div className="absolute inset-0 bg-gradient-to-br from-neon-red to-transparent opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-xl"></div>
+                      <span className="relative text-4xl mb-4 block">{event.icon}</span>
+                      <span className="relative text-neon-red font-display tracking-widest text-xs mb-1 block uppercase">
+                        {pickText(event.era, lang)}
+                      </span>
 
-                      <div className="relative flex items-center mb-4">
-                        <span className="text-neon-red text-2xl [margin-inline-end:0.75rem]">{event.icon}</span>
-                        <span className="text-neon-red text-xs uppercase tracking-widest font-display">
-                          {pickText(event.era, lang)}
-                        </span>
-                      </div>
-
-                      <h3 className="relative font-display text-xl font-bold mb-2 text-[var(--text)]">
+                      <h3 className="relative font-display text-2xl font-bold mb-3 text-neon-red">
                         {pickText(event.title, lang)}
                       </h3>
 
@@ -133,10 +129,10 @@ export default function TimelinePage() {
                       </p>
 
                       {hasExtraContent(event) && (
-                        <div className="relative mt-4">
+                        <div className="relative mt-4 border-t border-[var(--border)] pt-2">
                           <Accordion type="single" collapsible>
                             <AccordionItem value={`details-${event.id}`} className="border-none">
-                              <AccordionTrigger className="py-2 text-sm text-neon-red hover:no-underline">
+                              <AccordionTrigger className="py-2 text-sm text-neon-red hover:no-underline font-display uppercase tracking-widest">
                                 {t("timeline.event.details")}
                               </AccordionTrigger>
                               <AccordionContent className="pt-2">

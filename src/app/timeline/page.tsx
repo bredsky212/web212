@@ -1,172 +1,217 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { TIMELINE_EVENTS, type LocalizedText, type TimelineEvent } from "@/data/timelineEvents";
 
-const timelineData1 = [
-  {
-    id: "launch",
-    year: "Sept 18",
-    icon: "💬",
-  },
-  {
-    id: "dayone",
-    year: "Sept 27",
-    icon: "✊",
-  },
-  {
-    id: "expansion",
-    year: "Sept 29",
-    icon: "🔥",
-  },
-  {
-    id: "escalation",
-    year: "Sept 30",
-    icon: "⚡",
-  },
-  {
-    id: "tragedy",
-    year: "Oct 1",
-    icon: "🕯️",
-  },
-  {
-    id: "persistence",
-    year: "Oct 2-10",
-    icon: "📢",
-  },
-  {
-    id: "pause",
-    year: "Oct 11",
-    icon: "⏸️",
-  },
-  {
-    id: "resumption",
-    year: "Oct 18+",
-    icon: "🔄",
-  },
-  {
-    id: "response",
-    year: "Oct 19",
-    icon: "📋",
-  },
-];
+function pickText(text: LocalizedText | undefined, lang: string): string {
+  if (!text) return "";
+  // try exact lang, then EN, then AR, then first available
+  const direct = (text as Record<string, string | undefined>)[lang];
+  if (direct) return direct;
+  if (text.en) return text.en;
+  if (text.ar) return text.ar;
+  const first = Object.values(text).find(Boolean);
+  return first ?? "";
+}
 
-const timelineData = timelineData1.reverse();
+function hasExtraContent(e: TimelineEvent): boolean {
+  const hasDetails = Boolean(e.details && (e.details.en || e.details.ar || e.details.fr));
+  const hasPoints = Boolean(e.keyPoints && e.keyPoints.length);
+  const hasSources = Boolean(e.sources && e.sources.length);
+  return hasDetails || hasPoints || hasSources;
+}
 
 export default function TimelinePage() {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
+
+  // Keep "latest first" to match the existing site behavior
+  const timelineData = [...TIMELINE_EVENTS].sort((a, b) => b.order - a.order);
+
+  const stats = [
+    { value: "250K+", label: t("stats.discord") },
+    { value: "2,068+", label: t("stats.arrests") },
+    { value: "11+", label: t("stats.cities") },
+    { value: "3", label: t("stats.deaths") },
+  ];
 
   return (
-    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] selection:bg-neon-red selection:text-white">
-      <Navbar />
-
-      <div className="container mx-auto px-4 py-32 max-w-5xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
-        >
-          <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 text-[var(--text-primary)]">
-            {t("timeline.title").split(" ")[0]}{" "}
-            <span className="text-neon-red">
-              {t("timeline.title").split(" ").slice(1).join(" ")}
-            </span>
-          </h1>
-          <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
-            {t("timeline.subtitle")}
-          </p>
-        </motion.div>
-
-        {/* Timeline Container */}
-        <div className="relative">
-          {/* Center Line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-neon-red via-[var(--border)] to-transparent -translate-x-1/2 hidden md:block" />
-
-          {timelineData.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className={`relative flex items-center mb-16 md:mb-24 ${
-                index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-              }`}
-            >
-              {/* Content Card */}
-              <div
-                className={`w-full md:w-[45%] ${
-                  index % 2 === 0 ? "md:pr-12 md:text-right" : "md:pl-12"
-                }`}
-              >
-                <div className="relative bg-[var(--surface)] border border-[var(--border)] rounded-lg p-6 pt-10 md:pt-6 hover:border-neon-red/50 transition-colors duration-300 group">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 md:hidden">
-                    <div className="w-14 h-14 rounded-full bg-[var(--background)] border-2 border-neon-red flex items-center justify-center z-10 shadow-[0_0_20px_rgba(139,0,0,0.3)]">
-                      <span className="text-neon-red font-display font-bold text-[10px] leading-tight text-center">
-                        {item.year}
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-4xl mb-4 block">{item.icon}</span>
-                  <span className="text-neon-red font-display tracking-widest text-xs mb-1 block uppercase">
-                    {t(`timeline.event.${item.id}.era`)}
-                  </span>
-                  <h3 className="text-2xl font-bold mb-2 font-display group-hover:text-neon-red transition-colors text-[var(--foreground)]">
-                    {t(`timeline.event.${item.id}.title`)}
-                  </h3>
-                  <p className="pb-4 text-[var(--text-secondary)] text-sm leading-relaxed">
-                    {t(`timeline.event.${item.id}.desc`)}
-                  </p>
-                </div>
-              </div>
-
-              {/* Timeline Year Marker */}
-              <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-[var(--background)] border-2 border-neon-red flex items-center justify-center z-10 shadow-[0_0_20px_rgba(139,0,0,0.3)]">
-                  <span className="text-neon-red font-display font-bold text-xs">
-                    {item.year}
-                  </span>
-                </div>
-              </div>
-
-              {/* Empty Space for alternating layout */}
-              <div className="hidden md:block w-[45%]" />
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Stats Section */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4"
-        >
-          {[
-            { labelKey: "stats.discord", value: "250K+" },
-            { labelKey: "stats.arrests", value: "2,480+" },
-            { labelKey: "stats.cities", value: "20+" },
-            { labelKey: "stats.deaths", value: "3" },
-          ].map((stat, i) => (
-            <div
-              key={i}
-              className="bg-[var(--surface)]/50 border border-[var(--border)] rounded-lg p-4 text-center"
-            >
-              <p className="text-2xl font-display font-bold text-neon-red">
-                {stat.value}
-              </p>
-              <p className="text-xs text-[var(--text-secondary)] uppercase tracking-widest">
-                {t(stat.labelKey)}
-              </p>
-            </div>
-          ))}
-        </motion.div>
+    <div className="min-h-screen bg-[var(--background)] text-[var(--text)] overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-30">
+        <div className="absolute top-20 left-10 w-40 h-40 bg-neon-red rounded-full filter blur-[100px]"></div>
+        <div className="absolute top-1/2 right-10 w-60 h-60 bg-neon-red rounded-full filter blur-[120px] opacity-20"></div>
+        <div className="absolute bottom-20 left-1/3 w-40 h-40 bg-neon-red rounded-full filter blur-[100px] opacity-20"></div>
       </div>
 
+      <Navbar />
+
+      <main className="pt-24 pb-20 relative z-10">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-[var(--text)]">
+              {t("timeline.title")}
+            </h1>
+            <p className="text-xl text-[var(--text-secondary)] max-w-3xl mx-auto">
+              {t("timeline.subtitle")}
+            </p>
+          </motion.div>
+
+          <div className="flex flex-wrap justify-center gap-6 mb-16">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 * index }}
+                className="glass-card px-8 py-6 rounded-xl text-center min-w-[160px]"
+              >
+                <div className="font-display text-3xl font-bold text-neon-red mb-2">{stat.value}</div>
+                <div className="text-sm text-[var(--text-secondary)]">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="relative">
+            <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-neon-red opacity-30"></div>
+
+            <div className="space-y-12">
+              {timelineData.map((event, index) => (
+                <motion.div
+                  key={event.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 * index }}
+                  className={`flex flex-col md:flex-row items-center ${
+                    index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                  }`}
+                >
+                  <div className={`w-full md:w-5/12 ${index % 2 === 0 ? "md:text-right" : "md:text-left"}`}>
+                    <div className="glass-card p-6 pt-14 md:pt-6 rounded-xl relative group">
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 md:hidden">
+                        <div className="w-20 h-20 rounded-full bg-[var(--background)] border-2 border-neon-red flex items-center justify-center z-20 shadow-[0_0_20px_rgba(139,0,0,0.3)] px-2">
+                          <span className="text-neon-red font-display font-bold text-[10px] leading-tight text-center">
+                            {pickText(event.dateLabel, lang)}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="absolute inset-0 bg-gradient-to-br from-neon-red to-transparent opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-xl"></div>
+
+                      <div className="relative flex items-center mb-4">
+                        <span className="text-neon-red text-2xl [margin-inline-end:0.75rem]">{event.icon}</span>
+                        <span className="text-neon-red text-xs uppercase tracking-widest font-display">
+                          {pickText(event.era, lang)}
+                        </span>
+                      </div>
+
+                      <h3 className="relative font-display text-xl font-bold mb-2 text-[var(--text)]">
+                        {pickText(event.title, lang)}
+                      </h3>
+
+                      {!!event.location && (
+                        <div className="relative text-xs text-[var(--text-secondary)] mb-3">
+                          <span className="text-neon-red/80">{t("timeline.event.location")}:</span>{" "}
+                          <span>{pickText(event.location, lang)}</span>
+                        </div>
+                      )}
+
+                      <p className="relative text-[var(--text-secondary)] text-sm leading-relaxed whitespace-pre-line">
+                        {pickText(event.summary, lang)}
+                      </p>
+
+                      {hasExtraContent(event) && (
+                        <div className="relative mt-4">
+                          <Accordion type="single" collapsible>
+                            <AccordionItem value={`details-${event.id}`} className="border-none">
+                              <AccordionTrigger className="py-2 text-sm text-neon-red hover:no-underline">
+                                {t("timeline.event.details")}
+                              </AccordionTrigger>
+                              <AccordionContent className="pt-2">
+                                {!!event.details && (
+                                  <p className="text-[var(--text-secondary)] text-sm leading-relaxed whitespace-pre-line">
+                                    {pickText(event.details, lang)}
+                                  </p>
+                                )}
+
+                                {!!event.keyPoints?.length && (
+                                  <div className="mt-4">
+                                    <div className="text-xs uppercase tracking-widest font-display text-neon-red mb-2">
+                                      {t("timeline.event.keyPoints")}
+                                    </div>
+                                    <ul className="list-disc list-inside space-y-1 text-sm text-[var(--text-secondary)]">
+                                      {event.keyPoints.map((kp, i) => (
+                                        <li key={i}>{pickText(kp, lang)}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+
+                                {!!event.sources?.length && (
+                                  <div className="mt-4">
+                                    <div className="text-xs uppercase tracking-widest font-display text-neon-red mb-2">
+                                      {t("timeline.event.sources")}
+                                    </div>
+                                    <ul className="space-y-2">
+                                      {event.sources.map((src, i) => (
+                                        <li key={i} className="text-sm">
+                                          <a
+                                            href={src.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-[var(--text-secondary)] hover:text-neon-red transition-colors underline decoration-neon-red/30 hover:decoration-neon-red break-all"
+                                            dir="ltr"
+                                          >
+                                            {src.label}
+                                          </a>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="hidden md:flex w-2/12 justify-center">
+                    <div className="w-12 h-12 rounded-full bg-[var(--card-background)] border-2 border-neon-red flex items-center justify-center z-10 relative">
+                      <span className="text-neon-red text-lg font-bold">{event.icon}</span>
+                    </div>
+                  </div>
+
+                  <div className="hidden md:flex w-full md:w-5/12 justify-center md:justify-start mt-4 md:mt-0">
+                    <div
+                      className={`text-sm font-display text-neon-red px-4 py-2 rounded-lg bg-[var(--card-background)] border border-neon-red/30 ${
+                        index % 2 === 0 ? "md:ml-auto" : "md:mr-auto"
+                      }`}
+                    >
+                      {pickText(event.dateLabel, lang)}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </main>
+
       <Footer />
-    </main>
+    </div>
   );
 }
